@@ -1,7 +1,7 @@
 -- M2-入库单号统一脚本
 -- 目标：将历史测试数据统一为 inYYYYMMDDNNNN，并同步库存流水 biz_no
 -- 作用库：wms_db
--- 注意：本脚本仅更新 wms_db，不涉及 sme_recruitment_db
+-- 注意：本脚本仅更新 wms_db，不涉及其他项目数据库
 
 USE wms_db;
 

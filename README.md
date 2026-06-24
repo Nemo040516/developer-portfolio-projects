@@ -1,30 +1,27 @@
-# Developer Portfolio Projects
-
-This repository contains selected undergraduate graduation-project-scale systems for job applications and technical review.
-
-The projects here are honest portfolio examples: they are small academic / course / graduation-design level applications, not senior-level enterprise production systems. The code is kept public to show implementation ability, engineering habits, documentation, and testing awareness.
+# Developer Portfolio Projects / 求职作品集项目
 
 ## 中文说明
 
-这个仓库用于简历和面试作品展示。项目定位是**毕设级 / 课程设计级小项目**，不是非常高级、资深的企业级落地项目。
+这个仓库用于简历和面试作品展示，收录的是我整理过的**毕设级 / 课程设计级小项目**。这些项目可以展示前后端开发、接口设计、数据库脚本、测试用例和项目文档整理能力，但不应包装成资深工程师参与的大型企业级落地系统。
 
-其中原始本地目录 `JXY`、`CWH` 下的内容，已整理为匿名化的**同学委托开发 / 协助完成毕业设计项目案例**。仓库只展示可公开的代码、测试和工程结构，不公开同学姓名、学校材料、论文、答辩资料、视频素材和本机私有配置。
+项目来源已按功能重新命名，并做了公开仓库整理。这里的项目可表述为**匿名化的委托开发 / 协作开发项目案例**：只展示可讨论的技术实现，不公开个人姓名、学校材料、论文、答辩资料、视频素材、本机私有配置或运行期隐私数据。
 
-## Scope Notice
+## English
 
-- These are portfolio demonstrations based on local project work.
-- `JXY` and `CWH` source folders have been anonymized and reorganized before publishing.
-- The included projects are best described as **classmate-commissioned / collaborative graduation-project development cases**.
-- Personal names, school materials, papers, defense documents, runtime data, videos, local credentials, and generated build outputs are intentionally excluded.
+This repository is a resume and interview portfolio. It contains selected **undergraduate graduation-project-level / course-project-level projects** that have been reorganized for public technical review.
 
-## Projects
+These projects are honest small-scale portfolio examples. They demonstrate full-stack implementation, API design, database scripts, test coverage, and documentation habits, but they should not be described as senior-level enterprise production systems.
 
-| Project | Type | Tech Stack | What It Shows |
-| --- | --- | --- | --- |
-| [Warehouse Management System](projects/warehouse-management-system) | Graduation-project-level full-stack system | Vue 3, Vite, Spring Boot, MySQL, Playwright | CRUD workflows, role-based menus, inventory flows, SQL schema design, integration/E2E tests |
-| [Dance Motion Analysis System](projects/dance-motion-analysis-system) | Graduation-project-level web application | Python, Flask, HTML/CSS/JavaScript, pytest | Flask routing, service-layer design, video workflow pages, motion comparison logic, test coverage |
+The projects are renamed by function and published as **anonymized commissioned / collaborative development cases**. Only public code, tests, and engineering structure are included. Personal identifiers, school-specific materials, papers, defense files, video assets, private local configuration, and runtime data are excluded.
 
-## Repository Layout
+## Projects / 项目列表
+
+| Project | 中文名称 | Type / 类型 | Tech Stack / 技术栈 | What It Shows / 展示重点 |
+| --- | --- | --- | --- | --- |
+| [Warehouse Management System](projects/warehouse-management-system) | 仓储管理系统 | Graduation-project-level full-stack system / 毕设级全栈系统 | Vue 3, Vite, Spring Boot, MySQL, Playwright | CRUD workflows, role-based menus, inventory flows, SQL design, integration/E2E tests / 业务流程、权限菜单、库存流转、数据库脚本、测试 |
+| [Dance Motion Analysis System](projects/dance-motion-analysis-system) | 舞蹈动作视频比对与纠错系统 | Graduation-project-level web application / 毕设级 Web 应用 | Python, Flask, HTML/CSS/JavaScript, pytest | Flask routing, service-layer design, video workflow pages, motion comparison logic, tests / Flask 结构、服务层拆分、视频流程页面、动作比对逻辑、测试 |
+
+## Repository Layout / 仓库结构
 
 ```text
 developer-portfolio-projects/
@@ -43,14 +40,13 @@ developer-portfolio-projects/
       README.md
 ```
 
-## How to Read This Repository
+## How to Read / 如何阅读
 
-Recruiters and interviewers can start with the project README files, then inspect:
+For interview review, start with each project README, then inspect the backend services, frontend components, SQL scripts, and test cases.
 
-- backend service and controller code
-- frontend component structure
-- SQL schema and initialization scripts
-- integration tests and E2E tests
-- project-level limitations and improvement notes
+面试或代码审阅时，建议先看每个项目目录下的 README，再看后端服务层、前端组件、SQL 脚本和测试用例。
 
-The goal is not to claim large-scale production experience. The goal is to provide concrete code samples that can be discussed in an interview.
+The goal is not to claim large-scale production experience. The goal is to provide concrete code samples that can be discussed honestly in an interview.
+
+这个仓库的目标不是证明大型生产项目经验，而是提供可以在面试中真实讨论的代码样例。
+
