@@ -12,9 +12,9 @@
 
 主展示项目可表述为“我的自有本科毕业设计项目”。补充项目可表述为“匿名化的委托开发 / 协作开发项目案例”。这种表述既说明项目背景，又避免公开不必要的个人信息。
 
-公开仓库中只保留可讨论的技术实现，不包含：
+公开仓库中保留可讨论的技术实现，并单独包含一份主动公开的简历 PDF。除简历 PDF 外，项目目录不包含：
 
-- 个人姓名和学校专属材料
+- 个人姓名、联系方式和学校专属材料
 - 论文、答辩文件、任务书、过程稿
 - `target/`、`dist/`、缓存、日志等构建或运行产物
 - `.venv/`、`node_modules/` 等依赖目录
@@ -33,9 +33,9 @@ The projects are renamed by function:
 
 The main showcase project can be described as my own undergraduate graduation project. The additional projects can be described as anonymized commissioned / collaborative development cases. This wording keeps the background honest without exposing unnecessary personal details.
 
-The public repository intentionally excludes:
+The public repository keeps reviewable technical implementation and includes one intentionally public resume PDF. Except for the resume PDF, project folders intentionally exclude:
 
-- personal names and school-specific materials
+- personal names, contact details, and school-specific materials
 - thesis papers, defense files, task books, and draft review files
 - generated build output such as `target/`, `dist/`, caches, and logs
 - dependency folders such as `.venv/` and `node_modules/`

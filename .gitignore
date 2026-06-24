@@ -48,6 +48,8 @@ venv/
 *.doc
 *.docx
 *.pdf
+!resume/
+!resume/lin-zijian-resume-2026.pdf
 *.zip
 
 # media / model binaries

@@ -6,10 +6,11 @@ Selected projects for resume and interview review. The code has been reorganized
 
 ## Portfolio Snapshot / 作品集概览
 
+- **Resume / 简历**：[PDF resume](resume/lin-zijian-resume-2026.pdf) / [中文简历 PDF](resume/lin-zijian-resume-2026.pdf).
 - **Main showcase / 主展示项目**：SME Recruitment and Application Management Platform / 中小商家招聘与投递管理平台，我的自有本科毕业设计项目。
 - **Technical coverage / 技术覆盖**：Vue 3, Vite, Element Plus, Pinia, Spring Boot, Spring Security, JWT, MyBatis-Plus, MySQL, WebSocket, Flask, Playwright, JUnit, pytest.
 - **Review focus / 审阅重点**：multi-role workflows, API design, database schema, frontend state and routing, access control, file upload permissions, realtime messaging, automated tests.
-- **Public-safe version / 公开安全版本**：project names are functional and anonymized; personal identifiers, school-only materials, credentials, session state, uploads, logs, and build output are excluded.
+- **Public-safe project code / 公开安全项目代码**：project names are functional and anonymized; private school-only materials, credentials, session state, uploads, logs, and build output are excluded. The linked resume PDF is intentionally public contact material.
 
 ## Project Index / 项目索引
 
@@ -118,13 +119,13 @@ This is a portfolio repository, not a production deployment package.
 - The main showcase project is my own undergraduate graduation project.
 - The additional projects are anonymized collaboration / commissioned development cases.
 - Public code keeps the implementation structure that is useful for technical review.
-- Private academic materials, personal identifiers, local credentials, uploaded runtime files, logs, generated build output, and session state are excluded.
+- Private academic materials, local credentials, uploaded runtime files, logs, generated build output, and session state are excluded from project folders. The resume PDF is intentionally included as public contact material.
 - These projects demonstrate practical implementation ability, but should not be presented as senior enterprise production delivery experience.
 
 - 主展示项目是我的自有本科毕业设计项目。
 - 补充项目是已匿名化处理的协作 / 委托开发案例。
 - 公开仓库保留适合技术审阅的代码结构、测试和说明。
-- 论文、答辩材料、学校材料、个人标识、本机凭据、上传文件、日志、构建产物和登录态均不进入公开仓库。
+- 项目目录不包含论文、答辩材料、学校材料、本机凭据、上传文件、日志、构建产物和登录态；简历 PDF 作为主动公开的联系材料单独放在 `resume/` 目录。
 - 这些项目用于展示实际开发能力，不应包装成资深企业级生产交付经验。
 
 More details / 详细边界说明：[PROJECT_SCOPE.md](PROJECT_SCOPE.md)
