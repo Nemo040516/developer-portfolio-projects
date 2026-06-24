@@ -1,0 +1,37 @@
+# @file 速览索引
+# @summary 后端核心运行配置，负责端口、前端静态资源位置、数据源初始化与 JWT 鉴权参数。
+# @core 1. 配置服务端口 `server.port`（支持环境变量覆盖）
+# @core 2. 配置前端静态资源目录（支持离线包外置目录）
+# @core 3. 配置 MySQL 数据源（通过环境变量注入主机/端口/库名）
+# @core 4. 配置 SQL 初始化策略（启动时执行）
+# @core 5. 配置 JWT 密钥与过期时长
+# @entry 先看：`server.port`、`spring.web.resources`、`spring.datasource`、`spring.sql.init`、`app.jwt`
+# @deps 依赖：WmsBackendApplication、JwtTokenService、schema.sql、data.sql
+# @risk 高风险修改点：静态资源目录路径、数据库连接参数、明文默认密码、JWT 密钥泄露风险
+# @link 相关文件：后端/src/main/resources/schema.sql、后端/src/main/resources/data.sql
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  web:
+    resources:
+      # 离线包默认会把前端 dist 放在项目根目录 web/ 下，并通过该目录直出静态资源。
+      static-locations: file:${FRONTEND_DIST_DIR:./web/},classpath:/static/
+  datasource:
+    # 数据库连接（请按本机环境修改）
+    # 推荐做法：优先使用环境变量，避免把真实密码写死在仓库中。
+    # 默认值仅用于本地开发演示；公开仓库不保存真实数据库密码。
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:wms_db}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+
+app:
+  jwt:
+    # JWT 密钥请在部署前替换为强随机值，并改为环境变量注入。
+    secret: ${JWT_SECRET:portfolio-demo-jwt-secret-please-change}
+    expire-ms: 86400000

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "video_preview_content.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+window.MotionVideoPreviewConfig = {{ preview_js_config | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/api_client.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/video_preview.js') }}" defer></script>
+{% endblock %}

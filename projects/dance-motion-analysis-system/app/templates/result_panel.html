@@ -1,0 +1,106 @@
+<section class="result-panel result-panel--analysis">
+    <div class="result-panel-overview">
+        <div class="result-panel-summary-grid">
+            <article class="surface-card surface-card--compact result-status-card">
+                <div class="result-status-head">
+                    <div>
+                        <p class="result-eyebrow">本次状态</p>
+                        <h3>本次分析状态</h3>
+                    </div>
+                    <span id="result-state-pill" class="result-state-pill is-waiting">等待中</span>
+                </div>
+                <p id="result-feedback-status" class="muted-text">开始比对后，这里会先给出本次分析的状态提示；如果还没开始，会保留等待说明。</p>
+                <div class="result-meta-grid">
+                    <div class="result-mini-stat">
+                        <span>结果状态</span>
+                        <strong id="result-status">waiting</strong>
+                    </div>
+                    <div class="result-mini-stat">
+                        <span>采样速度</span>
+                        <strong id="result-sample-fps">--</strong>
+                    </div>
+                </div>
+            </article>
+
+            <article id="result-score-card" class="surface-card surface-card--compact result-score-card is-waiting">
+                <div class="result-status-head">
+                    <div>
+                        <p class="result-eyebrow">整体表现</p>
+                        <h3>整体评分</h3>
+                    </div>
+                    <span id="result-score-band" class="result-state-pill is-waiting">待出结果</span>
+                </div>
+                <div class="metric-placeholder metric-placeholder--score">
+                    <span class="metric-label">相似度</span>
+                    <strong id="result-score" class="metric-value">--</strong>
+                </div>
+                <p id="result-score-caption" class="result-score-caption">等待分析任务创建。</p>
+            </article>
+        </div>
+
+        <article class="surface-card surface-card--compact result-quicklook-card">
+            <div class="result-status-head">
+                <div>
+                    <p class="result-eyebrow">优先处理</p>
+                    <h3>先改这几处</h3>
+                </div>
+                <span class="result-count-pill">优先查看</span>
+            </div>
+            <ul id="result-priority-list" class="insight-list insight-list--priority">
+                <li>结果加载后，这里会先整理最值得优先查看的 3 项。</li>
+            </ul>
+        </article>
+    </div>
+
+    <article class="surface-card surface-card--compact result-insight-card">
+        <div class="result-status-head">
+            <div>
+                <p class="result-eyebrow">细看差异</p>
+                <h3>这次结果细看</h3>
+            </div>
+            <span id="result-insight-count" class="result-count-pill">0 项</span>
+        </div>
+        <p id="result-summary" class="result-summary-block">等待分析详情加载。</p>
+        <div class="result-tab-strip" role="tablist" aria-label="结果细项切换">
+            <button class="result-tab-button is-active" type="button" data-result-tab="suggestions" aria-selected="true" aria-label="调整建议">
+                <span>建议</span>
+                <span id="result-suggestion-count" class="result-count-pill">0</span>
+            </button>
+            <button class="result-tab-button" type="button" data-result-tab="joints" aria-selected="false" aria-label="关节偏差">
+                <span>关节</span>
+                <span id="result-joint-count" class="result-count-pill">0</span>
+            </button>
+            <button class="result-tab-button" type="button" data-result-tab="trajectory" aria-selected="false" aria-label="轨迹偏差">
+                <span>轨迹</span>
+                <span id="result-trajectory-count" class="result-count-pill">0</span>
+            </button>
+        </div>
+        <div class="result-group result-group--panel is-active" data-result-panel="suggestions">
+            <div class="result-group__head">
+                <strong>调整建议</strong>
+                <span class="result-group__note">点击即可定位回放</span>
+            </div>
+            <ul id="result-suggestions" class="insight-list">
+                <li>等待数据</li>
+            </ul>
+        </div>
+        <div class="result-group result-group--panel" data-result-panel="joints" hidden>
+            <div class="result-group__head">
+                <strong>关节偏差</strong>
+                <span class="result-group__note">先看角度和位置偏差</span>
+            </div>
+            <ul id="result-joint-diffs" class="insight-list">
+                <li>等待数据</li>
+            </ul>
+        </div>
+        <div class="result-group result-group--panel" data-result-panel="trajectory" hidden>
+            <div class="result-group__head">
+                <strong>轨迹偏差</strong>
+                <span class="result-group__note">先看路径和节奏差异</span>
+            </div>
+            <ul id="result-trajectory-diffs" class="insight-list">
+                <li>等待数据</li>
+            </ul>
+        </div>
+    </article>
+</section>

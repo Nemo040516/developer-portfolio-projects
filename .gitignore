@@ -1,0 +1,55 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.run/
+
+# local environment and secrets
+.env
+.env.*
+*.pem
+*.key
+
+# logs and runtime files
+*.log
+*.pid
+logs/
+output/
+storage/
+uploads/
+records/
+
+# Node
+node_modules/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+
+# Java / Maven
+target/
+*.class
+*.jar
+
+# Python
+__pycache__/
+.pytest_cache/
+.tmp_pytest/
+.venv/
+venv/
+
+# documents and private academic materials
+*.doc
+*.docx
+*.pdf
+*.zip
+
+# media / model binaries
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.task
+

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="surface-card session-shell">
+    <div class="section-heading">
+        <div>
+            <h3>上传 1 个或 2 个视频，开始本次分析</h3>
+            <p class="muted-text">上传 1 个视频可进入当前视频观察或参考视频预览，上传 2 个视频会先确认角色，再进入双视频评分。未保存前都只算临时分析。</p>
+        </div>
+        <span id="session-status" class="badge">等待导入</span>
+    </div>
+
+    <div class="session-grid">
+        <article class="surface-card surface-card--compact session-input-card">
+            <div class="section-heading section-heading--compact">
+                <div>
+                    <h3>视频导入与任务配置</h3>
+                    <p class="muted-text">视频 1 必填，视频 2 选填。进入下一步前，先在这里确认这次视频角色。</p>
+                </div>
+                <span class="badge">统一入口</span>
+            </div>
+            <form id="session-form" class="upload-form">
+                <label class="upload-field">
+                    <span>视频 1</span>
+                    <input id="session-video-primary" type="file" accept=".mp4,.mov,.avi,.mkv" required>
+                </label>
+                <label class="upload-field">
+                    <span>视频 2（可选）</span>
+                    <input id="session-video-secondary" type="file" accept=".mp4,.mov,.avi,.mkv">
+                </label>
+                <section class="surface-card surface-card--compact session-role-shell">
+                    <div class="section-heading section-heading--compact">
+                        <div>
+                            <h3>导入角色确认</h3>
+                            <p id="session-role-copy" class="muted-text">当前会根据你上传的视频数量，切换成单视频确认或双视频角色确认。</p>
+                        </div>
+                        <span id="session-role-mode" class="badge">等待视频</span>
+                    </div>
+
+                    <div id="session-single-role-group" class="session-role-group">
+                        <span class="session-role-label">单视频时，这段视频是</span>
+                        <div class="session-role-stack">
+                            <label class="session-role-option">
+                                <input type="radio" name="session-single-role" value="learner" checked>
+                                <span class="session-role-option__body">
+                                    <strong>当前视频</strong>
+                                    <span>进入单视频观察，重点看动作、关键点和骨骼走势。</span>
+                                </span>
+                            </label>
+                            <label class="session-role-option">
+                                <input type="radio" name="session-single-role" value="standard">
+                                <span class="session-role-option__body">
+                                    <strong>参考视频</strong>
+                                    <span>先进入参考视频预览，确认这段动作适不适合用来对比。</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="session-dual-role-group" class="session-role-group" hidden>
+                        <span class="session-role-label">双视频时，先确认谁是参考、谁是当前</span>
+                        <div class="session-role-grid">
+                            <label class="upload-field">
+                                <span>视频 1 角色</span>
+                                <select id="session-primary-role">
+                                    <option value="standard" selected>参考视频</option>
+                                    <option value="learner">当前视频</option>
+                                </select>
+                            </label>
+                            <label class="upload-field">
+                                <span>视频 2 角色</span>
+                                <select id="session-secondary-role">
+                                    <option value="learner" selected>当前视频</option>
+                                    <option value="standard">参考视频</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="session-actions session-actions--compact">
+                            <button id="session-swap-roles" type="button" class="action-link action-link--button action-link--secondary">交换角色</button>
+                        </div>
+                    </div>
+
+                    <div id="session-role-summary" class="empty-panel session-role-summary">
+                        <p>当前默认规则：上传 1 个视频时按“当前视频”处理，上传 2 个视频时按“视频 1 参考 / 视频 2 当前”处理。</p>
+                    </div>
+                </section>
+                <div class="session-actions">
+                    <button id="session-submit" type="submit" class="action-link action-link--button">进入预览与分析</button>
+                    <a class="action-link action-link--secondary" href="{{ url_for('web.history') }}">查看结果记录</a>
+                </div>
+            </form>
+            <div id="session-feedback" class="empty-panel">
+                <p>准备好视频后，直接进入下一步。未保存前的内容都不会作为长期记录保留。</p>
+            </div>
+        </article>
+
+        <aside class="surface-card surface-card--compact session-sidecard">
+            <div class="section-heading section-heading--compact">
+                <div>
+                    <h3>两种使用方式</h3>
+                    <p class="muted-text">系统会根据本次上传数量自动判断模式。</p>
+                </div>
+                <span class="badge">模式优先</span>
+            </div>
+            <div class="session-mode-stack">
+                <article class="session-mode-item">
+                    <strong>单视频观察</strong>
+                    <p>上传 1 个视频，进入单视频动作预览，重点看关键点、骨骼和动作走势。</p>
+                </article>
+                <article class="session-mode-item">
+                    <strong>双视频评分</strong>
+                    <p>上传 2 个视频，进入双视频对比和评分流程，再输出结果建议。</p>
+                </article>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/api_client.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
+{% endblock %}

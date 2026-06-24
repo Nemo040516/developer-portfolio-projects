@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/practice_stage.css') }}">
+{% endblock %}
+
+{% block content %}
+<section id="analysis-page" class="analysis-layout analysis-layout--practice analysis-layout--core" data-analysis-mode="empty">
+    <div class="analysis-main">
+        <article class="analysis-status-card analysis-section analysis-section--status analysis-core-status-card">
+            <div class="analysis-core-status-card__main">
+                <div class="analysis-core-status-card__lead">
+                    <p class="analysis-core-status-card__eyebrow">核心分析页</p>
+                    <div class="analysis-core-status-card__heading">
+                        <h2 id="analysis-mode-title">动作预览与分析</h2>
+                        <span id="analysis-mode-badge" class="badge">等待导入</span>
+                    </div>
+                    <p id="analysis-mode-description" class="muted-text">当前页只负责两件事：清晰查看动作，再决定是否生成评分结果。</p>
+                </div>
+                <div class="analysis-core-status-card__meta">
+                    <div class="analysis-context-card">
+                        <span class="analysis-context-card__label">当前模式</span>
+                        <strong id="analysis-session-status">未就绪</strong>
+                    </div>
+                    <div class="analysis-context-card">
+                        <span class="analysis-context-card__label">数据口径</span>
+                        <strong>过程不留存</strong>
+                    </div>
+                    <div class="analysis-context-card analysis-context-card--status">
+                        <span class="analysis-context-card__label">持久化范围</span>
+                        <strong>仅结果与建议</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis-core-status-card__foot">
+                <p id="analysis-session-feedback" class="muted-text">上传完成后，系统会自动按 1 个视频或 2 个视频切换到对应分析模式。</p>
+                <div class="analysis-inline-actions">
+                    <a id="analysis-session-primary-link" class="action-link" href="{{ url_for('web.session') }}">重新导入视频</a>
+                    <a class="action-link action-link--secondary" href="{{ url_for('web.history') }}">查看已保存结果</a>
+                </div>
+            </div>
+        </article>
+
+        <section id="analysis-workspace-section" class="analysis-section">
+            <section id="practice-stage-anchor-overview" class="surface-card practice-stage-command">
+                <div class="practice-stage-command__main">
+                    <div class="section-heading">
+                        <div>
+                            <p class="practice-stage-command__eyebrow">动作工作区</p>
+                            <h3>把当前视频直接放到主舞台里检查</h3>
+                            <p id="practice-stage-command-copy" class="muted-text">系统会根据当前素材自动切换成单视频观察或双视频评分流程。</p>
+                        </div>
+                        <span id="practice-stage-command-status" class="badge">等待素材</span>
+                    </div>
+                    <div id="practice-stage-context-chips" class="practice-stage-chip-row console-chip-grid console-chip-grid--compact">
+                        <span class="practice-stage-chip">等待上下文</span>
+                    </div>
+                    <div class="practice-stage-flow-strip" aria-label="分析流程标签">
+                        <button class="practice-stage-flow-step is-active" type="button" data-stage-anchor="overview">
+                            <span class="checkpoint-index">01</span>
+                            <span class="practice-stage-flow-step__body">
+                                <strong>确认素材</strong>
+                                <span>先确认当前要看的视频</span>
+                            </span>
+                        </button>
+                        <button class="practice-stage-flow-step" type="button" data-stage-anchor="workspace">
+                            <span class="checkpoint-index">02</span>
+                            <span class="practice-stage-flow-step__body">
+                                <strong>主舞台检查</strong>
+                                <span>看动作、骨骼和节奏走势</span>
+                            </span>
+                        </button>
+                        <button class="practice-stage-flow-step" type="button" data-stage-anchor="playback">
+                            <span class="checkpoint-index">03</span>
+                            <span class="practice-stage-flow-step__body">
+                                <strong>逐帧回看</strong>
+                                <span>慢放逐帧确认关键节点</span>
+                            </span>
+                        </button>
+                        <button class="practice-stage-flow-step" type="button" data-stage-anchor="overlays">
+                            <span class="checkpoint-index">04</span>
+                            <span class="practice-stage-flow-step__body">
+                                <strong>图层观察</strong>
+                                <span>切换关键点、轨迹和角度</span>
+                            </span>
+                        </button>
+                        <button id="practice-stage-generate-flow" class="practice-stage-flow-step practice-stage-flow-step--cta" type="button" data-stage-anchor="generate">
+                            <span class="checkpoint-index">05</span>
+                            <span class="practice-stage-flow-step__body">
+                                <strong>生成评分</strong>
+                                <span>双视频模式下生成结果</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="practice-stage-desk">
+                <div class="practice-stage-desk__main">
+                    <section id="practice-stage-anchor-workspace" class="analysis-preview-workspace practice-stage-workspace">
+                        <div class="section-heading analysis-preview-workspace__head">
+                            <div>
+                                <h3>主舞台</h3>
+                                <p class="muted-text">只保留查看、对比、控制和结果生成，不再承担素材选择与缓存恢复。</p>
+                            </div>
+                            <span id="practice-stage-preview-status" class="badge">等待素材</span>
+                        </div>
+                        <div class="analysis-preview-workspace__meta" aria-label="当前素材检查状态">
+                            <span id="practice-stage-preview-standard-status" class="analysis-workspace-pill" data-preview-chip="standard">参考视频待带入</span>
+                            <span id="practice-stage-preview-learner-status" class="analysis-workspace-pill" data-preview-chip="learner">当前视频待带入</span>
+                            <span id="practice-stage-preview-mode" class="analysis-workspace-pill">当前以主舞台检查为主</span>
+                        </div>
+
+                        <div class="analysis-stage-grid">
+                            <article class="video-card" data-player-role="standard">
+                                <div class="video-card__header video-card__header--workspace">
+                                    <div>
+                                        <p class="video-card__eyebrow">参考画面</p>
+                                        <h3>参考视频</h3>
+                                    </div>
+                                    <span class="video-card__hint">用于双视频评分</span>
+                                </div>
+                                <div id="practice-stage-standard-stage" class="analysis-player-card">
+                                    <div class="analysis-video-stage">
+                                        <video id="practice-stage-standard-player" class="analysis-video-player" playsinline preload="metadata"></video>
+                                        <svg id="practice-stage-standard-overlay" class="analysis-overlay-stage" viewBox="0 0 1 1" preserveAspectRatio="none" aria-label="参考视频叠加层"></svg>
+                                        <div id="practice-stage-standard-empty" class="analysis-player-empty">
+                                            <strong>等待参考视频</strong>
+                                            <p>双视频评分模式下，这里会显示参考视频及其骨骼走势。</p>
+                                        </div>
+                                    </div>
+                                    <div class="analysis-player-meta">
+                                        <div class="analysis-player-meta__primary">
+                                            <strong id="practice-stage-standard-title">参考视频尚未载入</strong>
+                                            <p id="practice-stage-standard-caption" class="muted-text">当前还没有正在检查的参考视频。</p>
+                                        </div>
+                                        <div class="analysis-player-meta__secondary">
+                                            <span id="practice-stage-standard-frame-meta" class="badge">等待数据</span>
+                                            <span id="practice-stage-standard-time-meta" class="muted-text">等待数据</span>
+                                        </div>
+                                    </div>
+                                    <div id="practice-stage-standard-overlays" class="frame-chip-row"></div>
+                                    <div class="analysis-angle-readout-shell">
+                                        <div class="analysis-angle-readout__head">
+                                            <span>当前角度读数</span>
+                                            <span>不遮挡火柴人视角</span>
+                                        </div>
+                                        <div id="practice-stage-standard-angle-readout" class="analysis-angle-readout">
+                                            <span class="analysis-angle-pill">等待数据</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="video-card" data-player-role="learner">
+                                <div class="video-card__header video-card__header--workspace">
+                                    <div>
+                                        <p class="video-card__eyebrow" id="practice-stage-learner-eyebrow">当前画面</p>
+                                        <h3 id="practice-stage-learner-heading">当前视频</h3>
+                                    </div>
+                                    <span class="video-card__hint" id="practice-stage-learner-hint">支持关键点与轨迹观察</span>
+                                </div>
+                                <div id="practice-stage-learner-stage" class="analysis-player-card">
+                                    <div class="analysis-video-stage">
+                                        <video id="practice-stage-learner-player" class="analysis-video-player" playsinline preload="metadata"></video>
+                                        <svg id="practice-stage-learner-overlay" class="analysis-overlay-stage" viewBox="0 0 1 1" preserveAspectRatio="none" aria-label="当前视频叠加层"></svg>
+                                        <div id="practice-stage-learner-empty" class="analysis-player-empty">
+                                            <strong>等待当前视频</strong>
+                                            <p>导入后，这里会显示你当前要观察或评分的视频。</p>
+                                        </div>
+                                    </div>
+                                    <div class="analysis-player-meta">
+                                        <div class="analysis-player-meta__primary">
+                                            <strong id="practice-stage-learner-title">当前视频尚未载入</strong>
+                                            <p id="practice-stage-learner-caption" class="muted-text">当前还没有正在检查的视频。</p>
+                                        </div>
+                                        <div class="analysis-player-meta__secondary">
+                                            <span id="practice-stage-learner-frame-meta" class="badge">等待数据</span>
+                                            <span id="practice-stage-learner-time-meta" class="muted-text">等待数据</span>
+                                        </div>
+                                    </div>
+                                    <div id="practice-stage-learner-overlays" class="frame-chip-row"></div>
+                                    <div class="analysis-angle-readout-shell">
+                                        <div class="analysis-angle-readout__head">
+                                            <span>当前角度读数</span>
+                                            <span>不遮挡火柴人视角</span>
+                                        </div>
+                                        <div id="practice-stage-learner-angle-readout" class="analysis-angle-readout">
+                                            <span class="analysis-angle-pill">等待数据</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section class="analysis-control-grid practice-stage-controls">
+                        <article id="practice-stage-anchor-playback" class="control-card">
+                            <div class="section-heading">
+                                <div>
+                                    <h3>播放与回看</h3>
+                                    <p class="muted-text">这里专门用来慢放、暂停和逐帧。</p>
+                                </div>
+                                <span id="practice-stage-playback-status" class="badge">待初始化</span>
+                            </div>
+                            <div class="control-strip">
+                                <button id="practice-stage-play" type="button">播放</button>
+                                <button id="practice-stage-pause" type="button">暂停</button>
+                                <button id="practice-stage-speed" type="button">倍速</button>
+                                <button id="practice-stage-mute" type="button">静音</button>
+                            </div>
+                            <div class="timeline-card">
+                                <div class="timeline-meta">
+                                    <strong id="practice-stage-step-label">对比帧：0 / 0</strong>
+                                    <span id="practice-stage-speed-label">1.0x</span>
+                                </div>
+                                <input id="practice-stage-progress" class="timeline-range" type="range" min="0" max="0" value="0">
+                                <div class="timeline-actions">
+                                    <button id="practice-stage-step-back" type="button">前一帧</button>
+                                    <button id="practice-stage-step-forward" type="button">后一帧</button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article id="practice-stage-anchor-overlays" class="toggle-card">
+                            <div class="section-heading">
+                                <div>
+                                    <h3>图层控制</h3>
+                                    <p class="muted-text">先切换看视频、叠加或火柴人，再按需打开关键点、轨迹和角度。</p>
+                                </div>
+                                <span id="practice-stage-toggle-status" class="badge">火柴人</span>
+                            </div>
+                            <div class="stage-view-switch" role="tablist" aria-label="主舞台显示模式">
+                                <button type="button" class="stage-view-switch__button" data-stage-view-mode="video" aria-selected="false" aria-label="主舞台只看视频">只看视频</button>
+                                <button type="button" class="stage-view-switch__button" data-stage-view-mode="overlay" aria-selected="false" aria-label="主舞台看视频叠加">视频叠加</button>
+                                <button type="button" class="stage-view-switch__button is-active" data-stage-view-mode="skeleton" aria-selected="true" aria-label="主舞台只看火柴人空白底">火柴人</button>
+                            </div>
+                            <div class="toggle-grid">
+                                <label id="practice-stage-toggle-keypoints-card"><input id="practice-stage-toggle-keypoints" type="checkbox" checked> 关键点</label>
+                                <label id="practice-stage-toggle-trajectory-card"><input id="practice-stage-toggle-trajectory" type="checkbox"> 轨迹</label>
+                                <label id="practice-stage-toggle-angles-card"><input id="practice-stage-toggle-angles" type="checkbox"> 角度</label>
+                            </div>
+                        </article>
+                    </section>
+                </div>
+
+                <aside id="practice-stage-anchor-generate" class="practice-stage-sidebar">
+                    <article class="practice-stage-action-panel">
+                        <div class="section-heading section-heading--compact">
+                            <div>
+                                <h3>当前任务</h3>
+                                <p class="muted-text">当前素材、主舞台状态和结果推进统一放在这里。</p>
+                            </div>
+                            <span id="practice-stage-action-status" class="badge">待检查</span>
+                        </div>
+                        <div class="practice-stage-action-panel__group">
+                            <label class="upload-field">
+                                <span>采样速度</span>
+                                <select id="practice-stage-sample-fps">
+                                    <option value="5">5</option>
+                                    <option value="8">8</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div id="practice-stage-action-meta" class="practice-stage-chip-row console-chip-grid">
+                            <span class="practice-stage-chip">等待状态</span>
+                        </div>
+                        <div class="practice-stage-action-panel__group practice-stage-action-panel__group--materials">
+                            <span class="practice-stage-action-panel__label">当前素材</span>
+                            <div id="practice-stage-material-grid" class="practice-stage-material-grid">
+                                <div class="empty-panel">
+                                    <p>当前还没有可检查的素材。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="practice-stage-action-panel__group">
+                            <span class="practice-stage-action-panel__label">主舞台装配</span>
+                            <button id="practice-stage-load-standard" type="button" class="action-link action-link--button action-link--secondary">载入参考视频</button>
+                            <button id="practice-stage-load-learner" type="button" class="action-link action-link--button action-link--secondary">载入当前视频</button>
+                        </div>
+                        <p id="practice-stage-feedback" class="muted-text practice-stage-feedback console-copy-card">从导入页带回的素材，会在这里自动检查。</p>
+                        <div class="practice-stage-action-panel__group" data-stage-group="result">
+                            <span class="practice-stage-action-panel__label">结果推进</span>
+                            <button id="practice-stage-start-analysis" type="button" class="action-link action-link--button">生成评分结果</button>
+                            <a id="practice-stage-back-analysis" class="action-link action-link--secondary" href="{{ url_for('web.session') }}">重新导入视频</a>
+                        </div>
+                        <div class="practice-stage-action-panel__group practice-stage-action-panel__group--secondary">
+                            <span class="practice-stage-action-panel__label">辅助入口</span>
+                            <a id="practice-stage-standard-preview-link" class="analysis-inline-link" href="{{ url_for('web.standard_preview') }}">单独查看参考视频</a>
+                            <a id="practice-stage-learner-preview-link" class="analysis-inline-link" href="{{ url_for('web.learner_preview') }}">单独查看当前视频</a>
+                        </div>
+                    </article>
+                </aside>
+            </div>
+        </section>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/api_client.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/analysis_player.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/practice_stage.js') }}" defer></script>
+{% endblock %}

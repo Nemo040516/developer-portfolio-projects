@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title }} | {{ product_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    {% block extra_styles %}{% endblock %}
+</head>
+<body class="page-body page-body--{{ active_nav | default('generic') }}">
+    <div class="app-shell">
+        <header class="site-header site-header--{{ shell_density }}">
+            <div class="brand-block brand-block--{{ shell_density }}">
+                <p class="brand-mark">动作练习反馈</p>
+                <div>
+                    <h1 class="brand-title">{{ product_name }}</h1>
+                    {% if shell_density == 'default' %}
+                    <p class="brand-subtitle">{{ product_tagline }}</p>
+                    {% else %}
+                    <p class="brand-context">{{ page_stage }} · {{ page_title }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if show_header_meta %}
+            <div class="site-header__meta">
+                <span class="sidebar-chip">本地处理</span>
+                <span class="sidebar-chip">双视频对照</span>
+                <span class="sidebar-chip">结果可回看</span>
+            </div>
+            {% endif %}
+        </header>
+
+        <nav class="site-nav site-nav--{{ shell_density }}" aria-label="主导航">
+            <a class="nav-link {% if active_nav == 'home' %}is-active{% endif %}" href="{{ url_for('web.index') }}">
+                <span class="nav-link__label">分析中心</span>
+                {% if show_nav_hints %}
+                <span class="nav-link__hint">从这里进入一次新的动作分析</span>
+                {% endif %}
+            </a>
+            <a class="nav-link {% if active_nav == 'session' %}is-active{% endif %}" href="{{ url_for('web.session') }}">
+                <span class="nav-link__label">导入视频</span>
+                {% if show_nav_hints %}
+                <span class="nav-link__hint">上传 1 个或 2 个视频，开始本次分析</span>
+                {% endif %}
+            </a>
+            <a class="nav-link {% if active_nav == 'analysis' %}is-active{% endif %}" href="{{ url_for('web.analysis') }}">
+                <span class="nav-link__label">预览分析</span>
+                {% if show_nav_hints %}
+                <span class="nav-link__hint">查看关键点、双视频对比和开始计算</span>
+                {% endif %}
+            </a>
+            <a class="nav-link {% if active_nav == 'history' %}is-active{% endif %}" href="{{ url_for('web.history') }}">
+                <span class="nav-link__label">结果记录</span>
+                {% if show_nav_hints %}
+                <span class="nav-link__hint">查看已经保存的结果和建议</span>
+                {% endif %}
+            </a>
+        </nav>
+
+        <main class="workspace-shell workspace-shell--{{ shell_density }}">
+            {% if show_page_hero %}
+            <section class="page-hero {% if page_shell_variant == 'compact' %}page-hero--compact{% endif %}">
+                <div class="page-hero__content">
+                    <p class="eyebrow">{{ page_stage }}</p>
+                    <h2>{{ page_title }}</h2>
+                    <p class="page-summary">{{ page_summary }}</p>
+                </div>
+                {% if show_page_guide and page_focus_points %}
+                <aside class="page-guide" aria-label="页面使用提示">
+                    <p class="page-guide__eyebrow">{{ page_focus_title }}</p>
+                    <ul class="page-guide__list">
+                        {% for item in page_focus_points %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+                {% endif %}
+            </section>
+            {% endif %}
+
+            {% if show_page_tags and page_tags %}
+            <div class="page-meta-strip" aria-label="页面能力标签">
+                {% for tag in page_tags %}
+                <span class="meta-chip">{{ tag }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="page-frame page-frame--{{ shell_density }}">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/responsive_layout.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/transient_cleanup.js') }}" defer></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

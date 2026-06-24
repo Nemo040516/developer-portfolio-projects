@@ -1,0 +1,14 @@
+# @file 速览索引
+# @summary 前端忽略规则，避免构建产物与 E2E 报告文件进入版本库。
+# @core 1. 忽略 node_modules
+# @core 2. 忽略 dist 构建产物
+# @core 3. 忽略 Playwright 报告与临时结果
+# @entry 先看：e2e/playwright-report、e2e/test-results
+# @deps 关键依赖：Playwright 默认输出目录
+# @risk 高风险修改点：误删忽略规则会导致大体积报告文件被提交
+# @link 相关文件：前端/e2e/playwright.config.ts
+
+node_modules/
+dist/
+e2e/playwright-report/
+e2e/test-results/

@@ -1,0 +1,184 @@
+/*
+ * @file 速览索引
+ * @summary 全站统一UI样式基线，负责面板、查询区、表格、按钮与响应式规则一致化。
+ * @core 1. 定义全局设计Token（颜色/圆角/文本）
+ * @core 2. 统一 `.panel/.toolbar/.pager` 等模块基础布局
+ * @core 3. 统一操作按钮语义色与表格可读性策略
+ * @core 4. 提供移动端断点下的查询区适配
+ * @entry 先看：`:root` 变量、`.panel`、`.toolbar`、`.op-*`、`@media` 规则
+ * @deps 依赖：前端/src/main.js、各业务组件（Inventory/Replenishment/Outbound等）
+ * @risk 高风险修改点：全局类名覆盖范围、按钮语义色、表格换行策略
+ * @link 相关文件：前端/src/main.js、前端/src/components/InventoryAlertPanel.vue
+ */
+/* 统一前端页面的视觉变量，确保各模块风格与库存预警页一致。 */
+:root {
+  --wms-panel-bg: #ffffff;
+  --wms-panel-border: #e7ebf2;
+  --wms-panel-radius: 10px;
+  --wms-button-radius: 8px;
+  --wms-text-main: #101828;
+  --wms-text-sub: #475467;
+  --wms-primary: #175cd3;
+}
+
+/* 统一模块容器：白底卡片 + 边框 + 一致内边距。 */
+.panel {
+  background: var(--wms-panel-bg) !important;
+  border: 1px solid var(--wms-panel-border);
+  border-radius: var(--wms-panel-radius) !important;
+  padding: 14px !important;
+}
+
+/* 统一查询工具栏：保持紧凑并支持换行。 */
+.toolbar {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px !important;
+  margin-bottom: 12px !important;
+}
+
+/* 统一查询区控件宽度，避免各页面使用零散内联样式。 */
+.wms-query-input {
+  width: 280px;
+}
+
+.wms-query-input-md {
+  width: 260px;
+}
+
+.wms-query-input-sm {
+  width: 240px;
+}
+
+.wms-query-select {
+  width: 140px;
+}
+
+.wms-query-select-lg {
+  width: 220px;
+}
+
+.wms-query-date {
+  width: 260px;
+}
+
+/* 统一分页区域位置。 */
+.pager {
+  margin-top: 12px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+/* 统一“明细小标题”区块布局。 */
+.item-header {
+  margin: 8px 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 统一操作按钮的矩形圆角风格。 */
+.op-btn {
+  border-radius: var(--wms-button-radius) !important;
+  padding: 4px 10px !important;
+  margin-right: 0 !important;
+}
+
+.op-btn + .op-btn {
+  margin-left: 6px !important;
+}
+
+/* 统一各业务动作按钮的语义色。 */
+.op-view {
+  color: #1d4ed8 !important;
+  background: #e8f0ff !important;
+  border-color: #c7dcff !important;
+}
+
+.op-edit {
+  color: #0f766e !important;
+  background: #e6f7f5 !important;
+  border-color: #bfece7 !important;
+}
+
+.op-submit,
+.op-toggle {
+  color: #9a3412 !important;
+  background: #fff4e6 !important;
+  border-color: #ffd9b0 !important;
+}
+
+.op-confirm {
+  color: #166534 !important;
+  background: #eaf9ec !important;
+  border-color: #bfe9c7 !important;
+}
+
+.op-reset {
+  color: #1d4ed8 !important;
+  background: #e8f0ff !important;
+  border-color: #c7dcff !important;
+}
+
+.op-delete {
+  color: #b42318 !important;
+  background: #feeceb !important;
+  border-color: #f7c8c4 !important;
+}
+
+/* 统一模块内按钮与表格的基础细节。 */
+.panel .el-button {
+  border-radius: var(--wms-button-radius);
+}
+
+.panel .el-button--primary {
+  background: var(--wms-primary);
+  border-color: var(--wms-primary);
+}
+
+.panel .el-button--primary:hover {
+  background: #164db2;
+  border-color: #164db2;
+}
+
+.panel .el-table {
+  --el-table-border-color: #e7ebf2;
+  --el-table-header-bg-color: #f8fafc;
+  --el-table-header-text-color: #344054;
+  --el-table-row-hover-bg-color: #f9fbff;
+}
+
+.panel .el-table th.el-table__cell {
+  font-weight: 600;
+}
+
+/* 统一表格可读性：默认允许内容换行，避免窄屏或紧凑布局下文字被截断。 */
+.panel .el-table .cell {
+  white-space: normal !important;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 操作列保持单行，避免按钮挤成多行影响交互。 */
+.panel .el-table td.is-right .cell,
+.panel .el-table th.is-right .cell {
+  white-space: nowrap !important;
+}
+
+@media (max-width: 760px) {
+  .panel {
+    padding: 12px !important;
+  }
+
+  .wms-query-input,
+  .wms-query-input-md,
+  .wms-query-input-sm,
+  .wms-query-select,
+  .wms-query-select-lg,
+  .wms-query-date {
+    width: 100%;
+  }
+}

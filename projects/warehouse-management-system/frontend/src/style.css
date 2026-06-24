@@ -1,0 +1,20 @@
+/*
+ * @file 速览索引
+ * @summary 全局基础样式，负责浏览器默认盒模型与根容器排版基线。
+ * @core 1. 统一全局 `box-sizing` 计算规则
+ * @core 2. 统一 `html/body/#app` 尺寸与默认中文字体栈
+ * @entry 先看：`* { box-sizing: border-box; }` 与 `html, body, #app` 规则
+ * @deps 依赖：前端/src/main.js
+ * @risk 高风险修改点：根容器高度规则、字体栈顺序（影响全站文本渲染）
+ * @link 相关文件：前端/src/main.js、前端/src/styles/unified-ui.css
+ */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+}

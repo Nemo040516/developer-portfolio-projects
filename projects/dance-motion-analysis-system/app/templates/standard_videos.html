@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="surface-card surface-card--compact">
+    <div class="section-heading">
+        <div>
+            <h3>先挑一段适合参考的示范动作</h3>
+            <p class="muted-text">这里用于准备本次练习的示范视频。先选中一段动作清楚的视频，然后直接回练习台在主舞台检查并开始比对。</p>
+        </div>
+        <span class="badge">先选示范，再回练习台</span>
+    </div>
+    <div class="checkpoint-strip">
+        <div class="checkpoint">
+            <span class="checkpoint-index">01</span>
+            <p>先从现有列表里挑一段动作最清楚的示范视频。</p>
+        </div>
+        <div class="checkpoint">
+            <span class="checkpoint-index">02</span>
+            <p>直接回到练习台，在主舞台检查示范素材和练习素材。</p>
+        </div>
+        <div class="checkpoint">
+            <span class="checkpoint-index">03</span>
+            <p>确认没问题后，直接用这段动作开始本次比对。</p>
+        </div>
+    </div>
+</section>
+
+<section class="surface-grid surface-grid--two">
+    <article class="surface-card">
+        <div class="section-heading">
+            <div>
+                <h3>可用示范视频</h3>
+                <p class="muted-text">左侧列表用于选择当前示范动作。选中后，右侧会告诉你这段视频是否适合拿来做本次练习参考。</p>
+            </div>
+            <span id="standard-video-status" class="badge">准备中</span>
+        </div>
+        <div id="standard-video-list" class="data-stack">
+            <div class="empty-panel">
+                <p>正在加载示范视频列表。</p>
+            </div>
+        </div>
+    </article>
+
+    <article class="surface-card">
+        <div class="section-heading">
+            <div>
+                <h3>当前选中的示范动作</h3>
+                <p class="muted-text">这里会先展示这段视频的基础信息，再给出更适合下一步操作的入口。默认主入口已经回到分析页。</p>
+            </div>
+            <span class="badge">当前参考动作</span>
+        </div>
+        <div id="standard-video-detail" class="empty-panel detail-panel">
+            <p>选择左侧示范视频后，这里会显示动作摘要、回到练习台的入口，以及需要时才使用的单独预览深链。</p>
+        </div>
+        <div class="section-divider"></div>
+        <div class="section-heading section-heading--compact">
+            <div>
+                <h3>没有合适的视频时再补充上传</h3>
+                <p class="muted-text">如果当前列表里没有合适的示范动作，再从这里补充一段新视频。上传后列表会自动刷新。</p>
+            </div>
+            <span id="standard-upload-status" class="badge">未上传</span>
+        </div>
+        <form id="standard-upload-form" class="upload-form">
+            <label class="upload-field">
+                <span>选择示范视频</span>
+                <input id="standard-upload-input" type="file" name="file" accept=".mp4,.mov,.avi,.mkv" required>
+            </label>
+            <button type="submit" class="action-link action-link--button">上传到示范视频库</button>
+        </form>
+        <div class="empty-panel">
+            <p id="standard-upload-feedback">建议优先从现有示范视频里挑选；只有没有合适动作时，再补充上传新视频。</p>
+        </div>
+    </article>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/api_client.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/standard_videos.js') }}" defer></script>
+{% endblock %}

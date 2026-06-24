@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
+{% endblock %}
+
+{% block content %}
+<section id="review-page" class="review-layout">
+    <section id="review-anchor-overview" class="surface-card review-command">
+        <div class="review-command__intro">
+            <div class="section-heading">
+                <div>
+                    <p class="review-command__eyebrow">分析结果报告</p>
+                    <h3 id="review-session-title">正在准备本次结果报告</h3>
+                    <p id="review-session-copy" class="muted-text">这里先固定本次结论、结果状态和后续处理方向。</p>
+                </div>
+                <span id="review-session-badge" class="badge">等待结果</span>
+            </div>
+
+            <div id="review-context-chips" class="review-chip-row console-chip-grid console-chip-grid--compact" aria-label="本次结果摘要">
+                <span class="review-chip">等待记录</span>
+            </div>
+        </div>
+        <div class="review-flow-strip" aria-label="结果复盘阶段标签">
+            <button class="review-flow-step is-active" type="button" data-review-anchor="overview">
+                <span class="checkpoint-index">01</span>
+                <span class="review-flow-step__body">
+                    <strong>看结论</strong>
+                    <span>先确认本次报告摘要</span>
+                </span>
+            </button>
+            <button class="review-flow-step" type="button" data-review-anchor="stage">
+                <span class="checkpoint-index">02</span>
+                <span class="review-flow-step__body">
+                    <strong>回看视频</strong>
+                    <span>再对动作和节奏</span>
+                </span>
+            </button>
+            <button class="review-flow-step" type="button" data-review-anchor="controls">
+                <span class="checkpoint-index">03</span>
+                <span class="review-flow-step__body">
+                    <strong>调回放</strong>
+                    <span>慢放逐帧确认细节</span>
+                </span>
+            </button>
+            <button class="review-flow-step" type="button" data-review-anchor="focus">
+                <span class="checkpoint-index">04</span>
+                <span class="review-flow-step__body">
+                    <strong>看重点</strong>
+                    <span>展开差异和建议</span>
+                </span>
+            </button>
+            <button class="review-flow-step review-flow-step--cta" type="button" data-review-anchor="next">
+                <span class="checkpoint-index">05</span>
+                <span class="review-flow-step__body">
+                    <strong>决定去向</strong>
+                    <span>继续分析或回结果记录</span>
+                </span>
+            </button>
+        </div>
+    </section>
+
+    <div class="review-desk">
+        <div class="review-desk__main">
+            <section id="review-anchor-stage" class="analysis-preview-workspace review-stage-shell">
+                <div class="section-heading analysis-preview-workspace__head">
+                    <div>
+                        <h3>双视频回看主舞台</h3>
+                        <p class="muted-text">这里只保留回看、比对和定位，不再混进素材准备动作。</p>
+                    </div>
+                    <span id="review-preview-status" class="badge">等待装配</span>
+                </div>
+                <div class="analysis-preview-workspace__meta" aria-label="当前回看状态">
+                    <span id="review-preview-standard-status" class="analysis-workspace-pill">示范待装配</span>
+                    <span id="review-preview-learner-status" class="analysis-workspace-pill">练习待装配</span>
+                    <span id="review-preview-mode" class="analysis-workspace-pill">当前以单次结果复盘为主</span>
+                </div>
+
+                <div class="analysis-stage-grid">
+                    <article class="video-card">
+                        <div class="video-card__header video-card__header--workspace">
+                            <div>
+                                <p class="video-card__eyebrow">参考画面</p>
+                                <h3>参考视频</h3>
+                            </div>
+                            <span class="video-card__hint">结果回放</span>
+                        </div>
+                        <div id="review-standard-stage" class="analysis-player-card">
+                            <div class="analysis-video-stage">
+                                <video id="review-standard-player" class="analysis-video-player" playsinline preload="metadata"></video>
+                                <svg id="review-standard-overlay" class="analysis-overlay-stage" viewBox="0 0 1 1" preserveAspectRatio="none" aria-label="示范动作叠加层"></svg>
+                                <div id="review-standard-empty" class="analysis-player-empty">
+                                    <strong>等待本次回看</strong>
+                                    <p>结果加载后，这里会显示参考视频回放和叠加层。</p>
+                                </div>
+                            </div>
+                            <div class="analysis-player-meta">
+                                <div class="analysis-player-meta__primary">
+                                    <strong id="review-standard-title">参考视频尚未载入</strong>
+                                    <p id="review-standard-caption" class="muted-text">当前还没有可回看的参考视频。</p>
+                                </div>
+                                <div class="analysis-player-meta__secondary">
+                                    <span id="review-standard-frame-meta" class="badge">等待数据</span>
+                                    <span id="review-standard-time-meta" class="muted-text">等待数据</span>
+                                </div>
+                            </div>
+                            <div id="review-standard-overlays" class="frame-chip-row"></div>
+                            <div class="analysis-angle-readout-shell">
+                                <div class="analysis-angle-readout__head">
+                                    <span>当前角度读数</span>
+                                    <span>不遮挡动作主体</span>
+                                </div>
+                                <div id="review-standard-angle-readout" class="analysis-angle-readout">
+                                    <span class="analysis-angle-pill">等待数据</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="video-card">
+                        <div class="video-card__header video-card__header--workspace">
+                            <div>
+                                <p class="video-card__eyebrow">当前画面</p>
+                                <h3>当前视频</h3>
+                            </div>
+                            <span class="video-card__hint">结果回放</span>
+                        </div>
+                        <div id="review-learner-stage" class="analysis-player-card">
+                            <div class="analysis-video-stage">
+                                <video id="review-learner-player" class="analysis-video-player" playsinline preload="metadata"></video>
+                                <svg id="review-learner-overlay" class="analysis-overlay-stage" viewBox="0 0 1 1" preserveAspectRatio="none" aria-label="练习动作叠加层"></svg>
+                                <div id="review-learner-empty" class="analysis-player-empty">
+                                    <strong>等待本次回看</strong>
+                                    <p>结果加载后，这里会显示练习动作回放和叠加层。</p>
+                                </div>
+                            </div>
+                            <div class="analysis-player-meta">
+                                <div class="analysis-player-meta__primary">
+                                    <strong id="review-learner-title">练习动作尚未载入</strong>
+                                    <p id="review-learner-caption" class="muted-text">当前还没有可回看的练习动作。</p>
+                                </div>
+                                <div class="analysis-player-meta__secondary">
+                                    <span id="review-learner-frame-meta" class="badge">等待数据</span>
+                                    <span id="review-learner-time-meta" class="muted-text">等待数据</span>
+                                </div>
+                            </div>
+                            <div id="review-learner-overlays" class="frame-chip-row"></div>
+                            <div class="analysis-angle-readout-shell">
+                                <div class="analysis-angle-readout__head">
+                                    <span>当前角度读数</span>
+                                    <span>不遮挡动作主体</span>
+                                </div>
+                                <div id="review-learner-angle-readout" class="analysis-angle-readout">
+                                    <span class="analysis-angle-pill">等待数据</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="review-anchor-controls" class="analysis-control-grid review-control-shell">
+                <article class="control-card">
+                            <div class="section-heading">
+                                <div>
+                                    <h3>播放与回看</h3>
+                                    <p class="muted-text">这里只负责回放、慢放和逐帧，不再改本次输入素材。</p>
+                                </div>
+                        <span id="review-playback-status" class="badge">待初始化</span>
+                    </div>
+                    <div class="control-strip">
+                        <button id="review-play" type="button">播放</button>
+                        <button id="review-pause" type="button">暂停</button>
+                        <button id="review-speed" type="button">倍速</button>
+                        <button id="review-mute" type="button">静音</button>
+                    </div>
+                    <div class="timeline-card">
+                        <div class="timeline-meta">
+                            <strong id="review-step-label">对比帧：0 / 0</strong>
+                            <span id="review-speed-label">1.0x</span>
+                        </div>
+                        <input id="review-progress" class="timeline-range" type="range" min="0" max="0" value="0">
+                        <div class="timeline-actions">
+                            <button id="review-step-back" type="button">前一帧</button>
+                            <button id="review-step-forward" type="button">后一帧</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="toggle-card">
+                    <div class="section-heading">
+                        <div>
+                            <h3>本次重点看什么</h3>
+                            <p class="muted-text">先切换看视频、叠加或火柴人；点建议定位时会自动切到叠加模式。</p>
+                        </div>
+                        <span id="review-toggle-status" class="badge">火柴人</span>
+                    </div>
+                    <div class="stage-view-switch" role="tablist" aria-label="复盘主舞台显示模式">
+                        <button type="button" class="stage-view-switch__button" data-stage-view-mode="video" aria-selected="false" aria-label="复盘主舞台只看视频">只看视频</button>
+                        <button type="button" class="stage-view-switch__button" data-stage-view-mode="overlay" aria-selected="false" aria-label="复盘主舞台看视频叠加">视频叠加</button>
+                        <button type="button" class="stage-view-switch__button is-active" data-stage-view-mode="skeleton" aria-selected="true" aria-label="复盘主舞台只看火柴人空白底">火柴人</button>
+                    </div>
+                    <div class="toggle-grid">
+                        <label id="review-toggle-keypoints-card"><input id="review-toggle-keypoints" type="checkbox" checked> 关键点</label>
+                        <label id="review-toggle-trajectory-card"><input id="review-toggle-trajectory" type="checkbox"> 轨迹</label>
+                        <label id="review-toggle-angles-card"><input id="review-toggle-angles" type="checkbox"> 角度</label>
+                    </div>
+                </article>
+            </section>
+
+            <section id="review-anchor-focus" class="review-detail-grid">
+                <div class="review-detail-grid__side">
+                    <section class="surface-card review-focus-stage review-focus-stage--hero">
+                        <div class="section-heading">
+                            <div>
+                                <p class="review-focus-stage__eyebrow">首要问题</p>
+                                <h3>先锁定当前最值得处理的重点</h3>
+                                <p id="review-focus-copy" class="muted-text">结果加载后，这里会先给出当前最值得看的建议。</p>
+                            </div>
+                            <span id="review-focus-status" class="badge">等待结果</span>
+                        </div>
+
+                        <div class="review-focus-hero">
+                            <div class="review-focus-hero__main">
+                                <strong id="review-focus-title">还没有定位到本次重点</strong>
+                                <p id="review-focus-summary" class="muted-text">结果加载后，这里会先提示最值得看的部位或节奏。</p>
+                            </div>
+                            <div class="review-focus-hero__side">
+                                <div class="review-focus-hero__label">建议回看片段</div>
+                                <div id="review-focus-meta" class="review-chip-row">
+                                    <span class="review-chip">等待结果</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="surface-card review-material-shell">
+                        <div class="section-heading section-heading--compact">
+                            <div>
+                                <h3>本次结果素材</h3>
+                                <p class="muted-text">这里保留示范和练习摘要，细看时不用回到顶部。</p>
+                            </div>
+                        </div>
+                        <div id="review-material-grid" class="review-material-grid">
+                            <div class="empty-panel">
+                                <p>还没有读取到本次结果素材。</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="review-result-stage">
+                    {% include "result_panel.html" %}
+                </div>
+            </section>
+        </div>
+        <aside class="review-desk__rail">
+            <article id="review-anchor-next" class="review-action-panel">
+                        <div class="section-heading section-heading--compact">
+                            <div>
+                                <h3>结果去向</h3>
+                                <p class="muted-text">这里直接给出本次结果的去向：继续分析、重新开始，或回结果记录。</p>
+                            </div>
+                            <span id="review-action-status" class="badge">等待结果</span>
+                        </div>
+                <p id="review-action-copy" class="muted-text console-copy-card">还没打开结果时，先回结果记录选一条报告。</p>
+                <div id="review-action-meta" class="review-chip-row console-chip-grid">
+                    <span class="review-chip">等待时间信息</span>
+                </div>
+                <button id="review-save-result" class="action-link action-link--button" type="button" disabled>结果生成后可保存</button>
+                <div class="review-action-panel__actions console-decision-grid">
+                    <a id="review-replay-link" class="console-decision-card console-decision-card--primary" href="{{ url_for('web.analysis') }}">
+                        <span class="console-decision-card__eyebrow">继续分析</span>
+                        <strong>带着这组视频继续分析</strong>
+                        <span class="console-decision-card__note">回到分析页，沿用当前这组视频继续看或重新评分。</span>
+                    </a>
+                    <a id="review-practice-link" class="console-decision-card" href="{{ url_for('web.session') }}">
+                        <span class="console-decision-card__eyebrow">重新开始</span>
+                        <strong>重新导入视频</strong>
+                        <span class="console-decision-card__note">开始一轮新的分析，不沿用当前结果素材。</span>
+                    </a>
+                    <a id="review-open-history" class="console-decision-card" href="{{ url_for('web.history') }}">
+                        <span class="console-decision-card__eyebrow">回到记录</span>
+                        <strong>查看结果记录</strong>
+                        <span class="console-decision-card__note">回到已保存结果列表，继续横向比较最近几次。</span>
+                    </a>
+                </div>
+            </article>
+        </aside>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/api_client.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/analysis_player.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/review.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,161 @@
+<section class="surface-grid surface-grid--two">
+    <article class="surface-card">
+        <div class="section-heading">
+            <div>
+                <h3>{{ preview_scope_title }}</h3>
+                <p class="muted-text">{{ preview_scope_description }}</p>
+            </div>
+            <span id="video-preview-status" class="badge">等待查询</span>
+        </div>
+        <div class="empty-panel">
+            <p>{{ preview_scope_tip }}</p>
+        </div>
+        <form id="video-preview-form" class="upload-form">
+            <div class="form-grid preview-picker-toolbar">
+                <label class="upload-field">
+                    <span>{{ preview_search_label }}</span>
+                    <input id="video-preview-search" type="search" placeholder="{{ preview_search_placeholder }}">
+                </label>
+                <label class="upload-field">
+                    <span>{{ preview_select_label }}</span>
+                    <select id="video-preview-video-select"></select>
+                </label>
+                <label class="upload-field">
+                    <span>采样 FPS</span>
+                    <select id="video-preview-sample-fps">
+                        <option value="5">5 FPS</option>
+                        <option value="8">8 FPS</option>
+                        <option value="10">10 FPS</option>
+                    </select>
+                </label>
+            </div>
+            <div id="video-preview-selected" class="empty-panel detail-panel">
+                <p>{{ preview_selected_placeholder }}</p>
+            </div>
+            <div class="section-heading section-heading--compact">
+                <div>
+                    <h3>{{ preview_picker_title }}</h3>
+                    <p class="muted-text">{{ preview_picker_description }}</p>
+                </div>
+            </div>
+            <div id="video-preview-library" class="compact-library-grid">
+                <div class="empty-panel">
+                    <p>正在准备可选视频列表。</p>
+                </div>
+            </div>
+            <button type="submit" class="action-link action-link--button">{{ preview_load_button_text }}</button>
+        </form>
+        <div id="video-preview-meta" class="empty-panel detail-panel">
+            <p>{{ preview_meta_placeholder }}</p>
+        </div>
+        <div id="video-preview-feedback" class="empty-panel">
+            <p>{{ preview_feedback_placeholder }}</p>
+        </div>
+    </article>
+
+    <article class="surface-card">
+        <div class="section-heading">
+            <div>
+                <h3>{{ preview_stage_title }}</h3>
+                <p class="muted-text">{{ preview_stage_description }}</p>
+            </div>
+            <span id="video-preview-frame-count" class="badge">-- 帧</span>
+        </div>
+        <section class="preview-player">
+            <div class="preview-sync-grid">
+                <section class="preview-panel preview-panel--stage">
+                    <div class="preview-panel__header">
+                        <strong>视频源回放</strong>
+                        <span id="video-preview-source-meta" class="muted-text">等待数据</span>
+                    </div>
+                    <div class="video-stage">
+                        <video id="video-preview-source-player" class="preview-source-player" playsinline preload="metadata"></video>
+                    </div>
+                </section>
+                <section class="preview-panel preview-panel--stage">
+                    <div class="preview-panel__header">
+                        <strong>火柴人回放</strong>
+                        <span id="video-preview-player-meta" class="muted-text">等待数据</span>
+                    </div>
+                    <div class="skeleton-legend" aria-label="骨骼部位配色说明">
+                        <span class="legend-chip legend-chip--torso">躯干</span>
+                        <span class="legend-chip legend-chip--left-arm">左臂</span>
+                        <span class="legend-chip legend-chip--right-arm">右臂</span>
+                        <span class="legend-chip legend-chip--left-leg">左腿</span>
+                        <span class="legend-chip legend-chip--right-leg">右腿</span>
+                    </div>
+                    <div id="video-preview-player-stage" class="stickman-stage stickman-stage--hero"></div>
+                </section>
+                {% if preview_enable_3d %}
+                <section class="preview-panel preview-panel--stage">
+                    <div class="preview-panel__header preview-panel__header--stack">
+                        <div>
+                            <strong>{{ preview_3d_stage_title }}</strong>
+                            <p class="muted-text">{{ preview_3d_stage_description }}</p>
+                        </div>
+                        <button id="video-preview-3d-reset" type="button" class="action-link action-link--secondary action-link--button preview-3d-reset">重置视角</button>
+                    </div>
+                    <div class="preview-3d-toolbar" aria-label="三维骨架操作提示">
+                        <span class="preview-3d-chip">拖拽旋转</span>
+                        <span class="preview-3d-chip">滚轮缩放</span>
+                        <span id="video-preview-3d-meta" class="muted-text">等待数据</span>
+                    </div>
+                    <div class="preview-3d-actions">
+                        <button id="video-preview-3d-rotate-left" type="button" class="action-link action-link--secondary action-link--button preview-3d-control">左转</button>
+                        <button id="video-preview-3d-rotate-right" type="button" class="action-link action-link--secondary action-link--button preview-3d-control">右转</button>
+                        <button id="video-preview-3d-tilt-up" type="button" class="action-link action-link--secondary action-link--button preview-3d-control">抬高</button>
+                        <button id="video-preview-3d-tilt-down" type="button" class="action-link action-link--secondary action-link--button preview-3d-control">压低</button>
+                        <button id="video-preview-3d-zoom-in" type="button" class="action-link action-link--secondary action-link--button preview-3d-control">放大</button>
+                        <button id="video-preview-3d-zoom-out" type="button" class="action-link action-link--secondary action-link--button preview-3d-control">缩小</button>
+                    </div>
+                    <div class="preview-3d-stage">
+                        <canvas id="video-preview-3d-canvas" class="preview-3d-canvas" width="720" height="540" aria-label="三维骨架预览"></canvas>
+                    </div>
+                </section>
+                {% endif %}
+            </div>
+            <div class="player-controls">
+                <div class="player-controls__buttons">
+                    <button id="video-preview-play" type="button" class="action-link action-link--button">播放</button>
+                    <button id="video-preview-pause" type="button" class="action-link action-link--button">暂停</button>
+                    <button id="video-preview-prev" type="button" class="action-link action-link--button">前一帧</button>
+                    <button id="video-preview-next" type="button" class="action-link action-link--button">后一帧</button>
+                </div>
+                <label class="player-controls__progress">
+                    <span id="video-preview-progress-label">0 / 0</span>
+                    <input id="video-preview-progress" type="range" min="0" max="0" value="0">
+                </label>
+            </div>
+        </section>
+        <div class="surface-grid surface-grid--two preview-grid">
+            <section class="preview-panel">
+                <div class="preview-panel__header">
+                    <strong>起始动作</strong>
+                    <span id="video-preview-first-meta" class="muted-text">等待数据</span>
+                </div>
+                <div id="video-preview-first-stage" class="stickman-stage"></div>
+            </section>
+            <section class="preview-panel">
+                <div class="preview-panel__header">
+                    <strong>结束动作</strong>
+                    <span id="video-preview-last-meta" class="muted-text">等待数据</span>
+                </div>
+                <div id="video-preview-last-stage" class="stickman-stage"></div>
+            </section>
+        </div>
+        <div class="surface-grid surface-grid--two preview-grid preview-grid--compact">
+            <section class="surface-card surface-card--compact preview-info-card">
+                <h3>{{ preview_angle_list_title }}</h3>
+                <ul id="video-preview-joints" class="feature-list">
+                    <li>等待数据</li>
+                </ul>
+            </section>
+            <section class="surface-card surface-card--compact preview-info-card">
+                <h3>{{ preview_trajectory_list_title }}</h3>
+                <ul id="video-preview-trajectories" class="feature-list">
+                    <li>等待数据</li>
+                </ul>
+            </section>
+        </div>
+    </article>
+</section>

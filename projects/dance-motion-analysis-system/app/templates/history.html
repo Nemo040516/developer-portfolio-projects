@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="history-layout">
+    <section id="history-anchor-overview" class="surface-card history-command-card">
+        <div class="history-command-card__main">
+            <div class="section-heading">
+                <div>
+                    <h3>结果记录概览</h3>
+                    <p class="muted-text">这里只保留最终结果的概览、筛选和打开入口，不再承担过程恢复。</p>
+                </div>
+                <span id="history-overview-status" class="badge">准备中</span>
+            </div>
+
+            <div class="history-phase-strip" aria-label="结果记录阶段标签">
+                <button class="history-phase-step is-active" type="button" data-history-anchor="overview">
+                    <span class="checkpoint-index">01</span>
+                    <span class="history-phase-step__body">
+                        <strong>看概览</strong>
+                        <span>先看数量和波动</span>
+                    </span>
+                </button>
+                <button class="history-phase-step" type="button" data-history-anchor="filter">
+                    <span class="checkpoint-index">02</span>
+                    <span class="history-phase-step__body">
+                        <strong>筛结果</strong>
+                        <span>按时间和状态快速筛</span>
+                    </span>
+                </button>
+                <button class="history-phase-step" type="button" data-history-anchor="select">
+                    <span class="checkpoint-index">03</span>
+                    <span class="history-phase-step__body">
+                        <strong>看摘要</strong>
+                        <span>先确认这一条值不值</span>
+                    </span>
+                </button>
+                <button class="history-phase-step history-phase-step--cta" type="button" data-history-anchor="next">
+                    <span class="checkpoint-index">04</span>
+                    <span class="history-phase-step__body">
+                        <strong>决定去向</strong>
+                        <span>打开报告或重新开始</span>
+                    </span>
+                </button>
+            </div>
+
+            <div id="history-overview" class="summary-grid summary-grid--six">
+                <div class="summary-tile">
+                    <strong>当前可见记录</strong>
+                    <span>--</span>
+                </div>
+                <div class="summary-tile">
+                    <strong>最近一周结果</strong>
+                    <span>--</span>
+                </div>
+                <div class="summary-tile">
+                    <strong>平均得分</strong>
+                    <span>--</span>
+                </div>
+                <div class="summary-tile">
+                    <strong>当前最好</strong>
+                    <span>等待数据</span>
+                </div>
+                <div class="summary-tile">
+                    <strong>建议回看</strong>
+                    <span>等待数据</span>
+                </div>
+                <div class="summary-tile">
+                    <strong>反复卡住</strong>
+                    <span>等待数据</span>
+                </div>
+            </div>
+        </div>
+
+        <aside class="history-command-card__rail">
+            <article class="history-command-panel">
+                <div class="section-heading section-heading--compact">
+                    <div>
+                        <h3>结果去向</h3>
+                        <p class="muted-text">先汇总筛选结果，再决定打开报告、继续分析，还是重新开始。</p>
+                    </div>
+                    <span id="history-filter-status" class="badge">准备中</span>
+                </div>
+                <p id="history-filter-summary" class="muted-text">正在等待历史记录数据。</p>
+                <div id="history-group-overview" class="history-group-overview" aria-live="polite"></div>
+                <div id="history-flight-deck" class="history-flight-deck" aria-live="polite">
+                    <div class="history-flight-deck__empty">正在汇总最近走势。</div>
+                </div>
+                <div class="history-command-panel__actions">
+                    <a id="history-start-practice-link" class="action-link" href="{{ url_for('web.session') }}">重新导入视频</a>
+                    <a id="history-adjust-materials-link" class="action-link action-link--secondary is-disabled" href="#" aria-disabled="true" tabindex="-1">先选一条再打开结果</a>
+                </div>
+            </article>
+        </aside>
+    </section>
+
+    <section class="history-workbench">
+        <article id="history-anchor-filter" class="surface-card history-list-workbench">
+            <div class="section-heading">
+                <div>
+                    <h3>结果筛选与记录列表</h3>
+                    <p class="muted-text">先筛出要看的结果，再打开这一次的记录。</p>
+                </div>
+                <span id="history-status" class="badge">准备中</span>
+            </div>
+
+            <div class="form-grid history-filter-grid">
+                <label class="upload-field">
+                    <span>搜索记录</span>
+                    <input
+                        id="history-search"
+                        type="search"
+                        placeholder="按记录编号、视频名、时间或摘要关键词筛选"
+                        autocomplete="off"
+                    >
+                </label>
+                <label class="upload-field">
+                    <span>结果状态</span>
+                    <select id="history-status-filter">
+                        <option value="all">全部结果</option>
+                        <option value="success">只看已完成</option>
+                        <option value="failed">只看失败</option>
+                        <option value="running">只看生成中</option>
+                        <option value="pending">只看待开始</option>
+                    </select>
+                </label>
+                <label class="upload-field">
+                    <span>排序方式</span>
+                    <select id="history-sort-order">
+                        <option value="recent">最近更新优先</option>
+                        <option value="score_asc">分数从低到高</option>
+                        <option value="score_desc">分数从高到低</option>
+                    </select>
+                </label>
+                <div class="history-filter-actions">
+                    <button id="history-clear-filters" class="action-link action-link--secondary action-link--button" type="button">清空筛选</button>
+                </div>
+            </div>
+
+            <div id="history-list" class="data-stack history-list-panel">
+                <div class="empty-panel">
+                    <p>正在等待历史记录数据。</p>
+                </div>
+            </div>
+        </article>
+
+        <article id="history-anchor-select" class="surface-card history-detail-workbench">
+            <div class="section-heading">
+                <div>
+                    <h3>结果摘要与去向</h3>
+                    <p class="muted-text">这里先看这次结果摘要和去向；完整回放仍在独立结果报告页。</p>
+                </div>
+                <span id="history-detail-status" class="badge">等待选择</span>
+            </div>
+            <div id="history-detail" class="empty-panel history-detail-panel">
+                <p>选中一条记录后，这里会显示摘要和后续动作。</p>
+            </div>
+        </article>
+    </section>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/api_client.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/history.js') }}" defer></script>
+{% endblock %}

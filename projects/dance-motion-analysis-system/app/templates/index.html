@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="surface-card launch-center-card">
+    <div class="launch-center-card__hero">
+        <div class="launch-center-card__copy">
+            <p class="launch-center-card__eyebrow">轻量视频动作分析工具</p>
+            <h3>直接上传视频，开始这一次分析</h3>
+            <p class="muted-text">当前不做推荐和恢复。上传 1 个视频可进入单视频观察，上传 2 个视频可进入双视频评分。</p>
+            <div class="launch-center-card__actions">
+                <a class="action-link" href="{{ url_for('web.session') }}">开始分析</a>
+                <a class="action-link action-link--secondary" href="{{ url_for('web.history') }}">查看结果记录</a>
+            </div>
+        </div>
+
+        <div class="launch-center-card__panel">
+            <div class="section-heading section-heading--compact">
+                <div>
+                    <h3>这次你可以做什么</h3>
+                    <p class="muted-text">只保留当前最核心的两条使用路径。</p>
+                </div>
+                <span class="badge">临时态优先</span>
+            </div>
+            <div class="launch-mode-grid">
+                <article class="launch-mode-card">
+                    <strong>单视频观察</strong>
+                    <p>上传 1 个视频，直接看关键点、骨骼、播放与逐帧效果。</p>
+                </article>
+                <article class="launch-mode-card">
+                    <strong>双视频评分</strong>
+                    <p>上传 2 个视频，进入双视频对比、计算评分和建议结果。</p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
