@@ -1,0 +1,425 @@
+/*
+文件速览：
+1. 文件职责：提供全局设计令牌、Element Plus 主题覆写与跨布局容器基线。
+2. 对外入口：在前端入口文件中全局引入，影响所有页面、组件和三套主布局。
+3. 关键结构：:root 设计令牌、全局组件皮肤、常用布局辅助类、桌面断点变量。
+4. 阅读建议：先看 :root 令牌，再看断点变量，最后看组件与布局辅助类。
+*/
+@import './base.css';
+
+:root {
+  /* 基础色彩 */
+  --ui-bg: #f5f5f7;
+  --ui-surface: #ffffff;
+  --ui-surface-muted: #fafafa;
+  --ui-border: rgba(17, 24, 39, 0.08);
+  --ui-border-strong: rgba(17, 24, 39, 0.12);
+  
+  /* 核心装饰 */
+  --ui-radius-sm: 8px;
+  --ui-radius-md: 12px;
+  --ui-radius-lg: 16px;
+  --ui-radius-full: 999px;
+  
+  --ui-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --ui-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --ui-shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.12);
+  --ui-shadow-premium: 0 2px 4px rgba(0,0,0,0.02), 0 10px 20px rgba(0,0,0,0.04);
+  --ui-shadow: var(--ui-shadow-sm);
+  
+  /* 品牌色与语义色 */
+  --ui-accent: #0071e3;
+  --ui-accent-hover: #005bb5;
+  --ui-accent-light: rgba(0, 113, 227, 0.1);
+  --ui-success: #10b981;
+  --ui-warning: #f59e0b;
+  --ui-danger: #ef4444;
+  --ui-text: #1d1d1f;
+  --ui-muted: #6e6e73;
+  --ui-muted-strong: #4b5563;
+  --ui-font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
+  /* 间距系统 */
+  --ui-space-xs: 4px;
+  --ui-space-sm: 8px;
+  --ui-space-md: 16px;
+  --ui-space-lg: 24px;
+  --ui-space-xl: 32px;
+
+  /* 布局系统 */
+  --ui-header-height: 60px;
+  --ui-shell-max-width: 1360px;
+  /* 前台主链路容器：针对 2K / 2.8K 缩放场景适度放宽内容区 */
+  --ui-main-shell-max-width: 1560px;
+  --ui-main-shell-max-width-wide: 1680px;
+  --ui-shell-gutter: clamp(16px, 2vw, 28px);
+  --ui-shell-gap: clamp(12px, 1.4vw, 20px);
+  --ui-layout-rail-width: clamp(188px, 16vw, 220px);
+  --ui-layout-rail-width-compact: 184px;
+  --ui-layout-rail-collapsed-width: 72px;
+  
+  /* 动效系统 */
+  --ui-motion-fast: 160ms;
+  --ui-motion-base: 220ms;
+  --ui-motion-slow: 320ms;
+  --ui-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ui-ease-emphasis: cubic-bezier(0.2, 0, 0, 1);
+  --ui-ease-decelerate: cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* IM 专用变量 (Apple HIG 风格) */
+  --chat-bg: #f2f2f7;
+  --chat-bubble-mine: #0071e3;
+  --chat-bubble-other: #ffffff;
+  --chat-text-mine: #ffffff;
+  --chat-text-other: #1d1d1f;
+  --chat-item-hover: rgba(0, 0, 0, 0.03);
+  --chat-item-active: rgba(0, 113, 227, 0.05);
+  --chat-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --chat-border: rgba(0, 0, 0, 0.04);
+
+  /* Element Plus 变量覆盖 */
+  --el-color-primary: var(--ui-accent);
+  --el-border-radius-base: var(--ui-radius-md);
+  --el-font-family: var(--ui-font-family);
+}
+
+@media (max-width: 1680px) {
+  :root {
+    --ui-main-shell-max-width: 1480px;
+    --ui-main-shell-max-width-wide: 1560px;
+  }
+}
+
+@media (max-width: 1440px) {
+  :root {
+    --ui-shell-max-width: 1280px;
+    --ui-main-shell-max-width: 1320px;
+    --ui-main-shell-max-width-wide: 1380px;
+  }
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --ui-shell-gutter: 18px;
+    --ui-shell-gap: 14px;
+    --ui-layout-rail-width-compact: 176px;
+  }
+}
+
+@media (max-width: 992px) {
+  :root {
+    --ui-shell-gutter: 14px;
+    --ui-shell-gap: 12px;
+  }
+}
+
+/* 页面根节点：统一由 main.css 接管，避免样式来源分叉 */
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  font-family: var(--ui-font-family);
+  -webkit-font-smoothing: antialiased;
+  min-width: 320px;
+}
+
+/* --- 全局组件皮肤定制 --- */
+
+/* 1. 按钮 (微动效增强) */
+.el-button {
+  border-radius: var(--ui-radius-md);
+  font-weight: 500;
+  transition: all var(--ui-motion-base) var(--ui-ease-standard);
+}
+
+/* 统一非文本按钮的 hover / active 手感，避免页面间点击反馈不一致 */
+.el-button:not(.is-text):not(.is-link):not(.is-disabled):hover {
+  transform: translateY(-1px);
+}
+
+.el-button:not(.is-text):not(.is-link):not(.is-disabled):active {
+  transform: translateY(0) scale(0.97); /* 轻按压反馈 */
+}
+
+.el-button--primary {
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.2);
+}
+
+.el-button--primary:hover {
+  box-shadow: 0 6px 16px rgba(0, 113, 227, 0.3);
+  transform: translateY(-1px);
+}
+
+/* 2. 卡片 (统一阴影与悬浮) */
+.el-card {
+  border-radius: var(--ui-radius-lg);
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+  transition: all var(--ui-motion-base) var(--ui-ease-standard);
+}
+
+.el-card.is-always-shadow, 
+.el-card.is-hover-shadow:hover {
+  box-shadow: var(--ui-shadow-md);
+}
+
+.el-card.is-hover-shadow:hover {
+  transform: translateY(-3px); /* 悬浮位移动效 */
+}
+
+/* 3. 输入框 */
+.el-input__wrapper, .el-textarea__inner {
+  border-radius: var(--ui-radius-md);
+  box-shadow: 0 0 0 1px var(--ui-border) inset;
+  transition:
+    box-shadow var(--ui-motion-base) var(--ui-ease-standard),
+    background-color var(--ui-motion-base) var(--ui-ease-standard),
+    border-color var(--ui-motion-base) var(--ui-ease-standard);
+  background-color: var(--ui-surface);
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--ui-muted) inset;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--ui-accent) inset, 0 0 0 4px var(--ui-accent-light) !important;
+}
+
+/* 4. 表格 (保留并优化卡片化设计) */
+.el-table {
+  background: transparent !important;
+}
+
+.el-table__inner-wrapper::before { display: none; }
+
+.el-table th.el-table__cell {
+  background-color: transparent !important;
+  color: var(--ui-muted-strong);
+  font-weight: 600;
+  border-bottom: none !important;
+}
+
+.el-table__body {
+  border-collapse: separate !important;
+  border-spacing: 0 var(--ui-space-sm) !important; /* 行间距 */
+}
+
+.el-table__row td.el-table__cell {
+  background: var(--ui-surface) !important;
+  border-top: 1px solid var(--ui-border) !important;
+  border-bottom: 1px solid var(--ui-border) !important;
+  transition:
+    background-color var(--ui-motion-base) var(--ui-ease-standard),
+    border-color var(--ui-motion-base) var(--ui-ease-standard),
+    box-shadow var(--ui-motion-base) var(--ui-ease-standard);
+}
+
+.el-table__row td.el-table__cell:first-child {
+  border-left: 1px solid var(--ui-border) !important;
+  border-top-left-radius: var(--ui-radius-md);
+  border-bottom-left-radius: var(--ui-radius-md);
+}
+
+.el-table__row td.el-table__cell:last-child {
+  border-right: 1px solid var(--ui-border) !important;
+  border-top-right-radius: var(--ui-radius-md);
+  border-bottom-right-radius: var(--ui-radius-md);
+}
+
+.el-table__row:hover td.el-table__cell {
+  background: #fcfdfe !important;
+  border-color: var(--ui-accent-light) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* 5. 标签与对话框 */
+.el-tag {
+  border-radius: var(--ui-radius-full);
+  font-weight: 500;
+  border: none;
+}
+
+.el-dialog {
+  border-radius: var(--ui-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ui-shadow-lg);
+}
+
+.el-dialog__header {
+  margin-right: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+/* --- 全局 Apple 风格弹出层 (Popovers) --- */
+.el-popper.is-light {
+  border-radius: 16px !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12) !important;
+  padding: 8px !important;
+}
+
+.el-select-dropdown__list, .el-cascader-menu__list {
+  padding: 0 !important;
+}
+
+.el-select-dropdown__item, .el-cascader-node {
+  height: 36px !important;
+  line-height: 36px !important;
+  border-radius: 10px !important;
+  margin: 2px 0 !important;
+  font-size: 14px !important;
+  color: var(--ui-text) !important;
+  padding: 0 12px !important;
+}
+
+.el-select-dropdown__item.is-hovering, .el-cascader-node:hover {
+  background-color: #f2f2f7 !important;
+}
+
+.el-select-dropdown__item.is-selected {
+  background-color: var(--ui-accent-light) !important;
+  color: var(--ui-accent) !important;
+  font-weight: 600 !important;
+}
+
+/* 隐藏小箭头（Apple 审美通常不需要那个三角形） */
+.el-popper__arrow {
+  display: none !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ui-border-strong);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* --- 常用布局辅助类 --- */
+.page-container {
+  width: min(calc(100% - (var(--ui-shell-gutter) * 2)), var(--ui-shell-max-width));
+  margin: 0 auto;
+  padding: var(--ui-space-lg) 0;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-muted {
+  color: var(--ui-muted);
+  font-size: 14px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+/* 高频列表页统一适配：用于筛选区、工具栏和分页区的弹性收口 */
+.adaptive-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adaptive-filter-control {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.adaptive-filter-control--sm {
+  flex-basis: 140px;
+}
+
+.adaptive-filter-control--md {
+  flex-basis: 180px;
+}
+
+.adaptive-filter-control--lg {
+  flex-basis: 240px;
+}
+
+.adaptive-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.adaptive-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adaptive-pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 0 4px;
+}
+
+@media (max-width: 992px) {
+  .page-container {
+    padding: var(--ui-space-md) 0;
+  }
+
+  .adaptive-filter-control,
+  .adaptive-filter-control--sm,
+  .adaptive-filter-control--md,
+  .adaptive-filter-control--lg {
+    flex: 1 1 calc(50% - 6px);
+  }
+
+  .adaptive-filter-actions {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .adaptive-filter-control,
+  .adaptive-filter-control--sm,
+  .adaptive-filter-control--md,
+  .adaptive-filter-control--lg {
+    flex-basis: 100%;
+  }
+
+  .adaptive-filter-actions {
+    width: 100%;
+  }
+
+  .adaptive-filter-actions > * {
+    flex: 1 1 120px;
+  }
+
+  .adaptive-pagination {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+}

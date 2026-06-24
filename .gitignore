@@ -8,17 +8,21 @@ Thumbs.db
 # local environment and secrets
 .env
 .env.*
+!.env.example
 *.pem
 *.key
 
 # logs and runtime files
 *.log
+*.err
+*.out
 *.pid
 logs/
 output/
 storage/
 uploads/
 records/
+e2e/session-state/*.json
 
 # Node
 node_modules/
@@ -52,4 +56,3 @@ venv/
 *.avi
 *.mkv
 *.task
-

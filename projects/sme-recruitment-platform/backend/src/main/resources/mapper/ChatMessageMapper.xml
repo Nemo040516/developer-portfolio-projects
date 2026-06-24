@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.ChatMessageMapper">
+
+    <select id="selectSessionLastMessageList" resultType="com.example.backend.vo.ChatSessionRow">
+        SELECT
+            t.peer_id AS peerId,
+            cm.content AS lastMessage,
+            cm.create_time AS lastTime
+        FROM (
+            SELECT
+                CASE WHEN from_user_id = #{userId} THEN to_user_id ELSE from_user_id END AS peer_id,
+                MAX(id) AS last_id
+            FROM chat_message
+            WHERE from_user_id = #{userId} OR to_user_id = #{userId}
+            GROUP BY peer_id
+        ) t
+        JOIN chat_message cm ON cm.id = t.last_id
+        ORDER BY cm.create_time DESC, cm.id DESC
+    </select>
+
+    <select id="selectUnreadCountList" resultType="com.example.backend.vo.ChatUnreadCountRow">
+        SELECT
+            from_user_id AS peerId,
+            COUNT(*) AS unreadCount
+        FROM chat_message
+        WHERE to_user_id = #{userId} AND is_read = 0
+        GROUP BY from_user_id
+    </select>
+
+    <select id="selectMessagePage" resultType="com.example.backend.entity.ChatMessage">
+        SELECT
+            id,
+            from_user_id,
+            to_user_id,
+            content,
+            is_read,
+            job_id,
+            job_key,
+            create_time
+        FROM chat_message
+        WHERE (from_user_id = #{userId} AND to_user_id = #{peerId})
+           OR (from_user_id = #{peerId} AND to_user_id = #{userId})
+        ORDER BY create_time DESC, id DESC
+    </select>
+
+    <select id="selectLatestSimilarMessage" resultType="com.example.backend.entity.ChatMessage">
+        SELECT
+            id,
+            from_user_id,
+            to_user_id,
+            content,
+            is_read,
+            job_id,
+            job_key,
+            create_time
+        FROM chat_message
+        WHERE from_user_id = #{fromUserId}
+          AND to_user_id = #{toUserId}
+          AND content = #{content}
+          <choose>
+              <when test="jobId != null">
+                  AND job_id = #{jobId}
+              </when>
+              <otherwise>
+                  AND job_id IS NULL
+              </otherwise>
+          </choose>
+          <choose>
+              <when test="jobKey != null and jobKey != ''">
+                  AND job_key = #{jobKey}
+              </when>
+              <otherwise>
+                  AND (job_key IS NULL OR job_key = '')
+              </otherwise>
+          </choose>
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <update id="markRead">
+        UPDATE chat_message
+        SET is_read = 1
+        WHERE to_user_id = #{userId} AND from_user_id = #{peerId} AND is_read = 0
+    </update>
+</mapper>

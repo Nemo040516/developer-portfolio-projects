@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.JobInfoMapper">
+
+    <!--
+      列表查询
+    -->
+    <select id="selectPublicList" resultType="com.example.backend.vo.JobInfoVO">
+        SELECT
+            j.id,
+            j.title,
+            j.min_salary AS minSalary,
+            j.max_salary AS maxSalary,
+            j.headcount AS headcount,
+            j.work_location AS workLocation,
+            j.district,
+            j.experience,
+            j.degree,
+            j.tags,
+            j.create_time AS createTime,
+
+            -- 【优化】公司名逻辑：只取企业表的公司名，如果没有，显示'未认证企业'
+            -- 不再使用用户昵称填充公司名，避免出现“公司名=人名”的尴尬情况
+            COALESCE(m.company_name, '未认证企业') AS companyName,
+            COALESCE(m.company_logo, u.avatar) AS companyLogo,
+
+            -- 发布者信息
+            COALESCE(u.nickname, u.username, '招聘官') AS publisherName,
+            u.avatar AS publisherAvatar
+        FROM job_post j
+        LEFT JOIN sys_user u ON j.merchant_id = u.id
+        LEFT JOIN merchant_profile m ON u.id = m.user_id
+        WHERE j.status = 1
+          AND j.audit_status = 1
+        <if test="keyword != null and keyword != ''">
+            AND (j.title LIKE CONCAT('%', #{keyword}, '%')
+                 OR COALESCE(m.company_name, '未认证企业') LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="categoryId != null">
+            AND j.category_id = #{categoryId}
+        </if>
+        <if test="degree != null and degree != ''">
+            AND j.degree = #{degree}
+        </if>
+        <if test="experience != null and experience != ''">
+            AND j.experience = #{experience}
+        </if>
+        <if test="location != null and location != ''">
+            AND (j.work_location LIKE CONCAT('%', #{location}, '%')
+                 OR j.district LIKE CONCAT('%', #{location}, '%'))
+        </if>
+        <if test="city != null and city != ''">
+            AND j.work_location = #{city}
+        </if>
+        <if test="district != null and district != ''">
+            AND j.district = #{district}
+        </if>
+        <if test="minSalary != null">
+            AND j.max_salary &gt;= #{minSalary}
+        </if>
+        <if test="maxSalary != null">
+            AND j.min_salary &lt;= #{maxSalary}
+        </if>
+        <if test="industry != null and industry != ''">
+            AND m.industry = #{industry}
+        </if>
+        <if test="scale != null and scale != ''">
+            AND m.scale = #{scale}
+        </if>
+        <if test="financing != null and financing != ''">
+            AND m.financing = #{financing}
+        </if>
+        <if test="smartDegreeCap != null and smartDegreeCap != ''">
+            AND (
+                j.degree IS NULL
+                OR j.degree = ''
+                OR j.degree = '不限'
+                OR (
+                    CASE j.degree
+                        WHEN '大专' THEN 1
+                        WHEN '本科' THEN 2
+                        WHEN '硕士' THEN 3
+                        WHEN '博士' THEN 4
+                        ELSE 0
+                    END
+                    &lt;=
+                    CASE #{smartDegreeCap}
+                        WHEN '大专' THEN 1
+                        WHEN '本科' THEN 2
+                        WHEN '硕士' THEN 3
+                        WHEN '博士' THEN 4
+                        ELSE 0
+                    END
+                )
+            )
+        </if>
+        <if test="smartExperienceCap != null and smartExperienceCap != ''">
+            AND (
+                j.experience IS NULL
+                OR j.experience = ''
+                OR j.experience = '不限'
+                OR (
+                    CASE j.experience
+                        WHEN '应届生' THEN 1
+                        WHEN '1-3年' THEN 2
+                        WHEN '3-5年' THEN 3
+                        WHEN '5-10年' THEN 4
+                        WHEN '10年以上' THEN 5
+                        ELSE 0
+                    END
+                    &lt;=
+                    CASE #{smartExperienceCap}
+                        WHEN '应届生' THEN 1
+                        WHEN '1-3年' THEN 2
+                        WHEN '3-5年' THEN 3
+                        WHEN '5-10年' THEN 4
+                        WHEN '10年以上' THEN 5
+                        ELSE 0
+                    END
+                )
+            )
+        </if>
+        <if test="smartMinSalary != null">
+            AND (j.max_salary IS NULL OR j.max_salary &gt;= #{smartMinSalary})
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sort == 'salaryDesc'">
+                j.max_salary DESC, j.min_salary DESC
+            </when>
+            <when test="sort == 'salaryAsc'">
+                j.min_salary ASC, j.max_salary ASC
+            </when>
+            <when test="sort == 'viewDesc'">
+                j.view_count DESC
+            </when>
+            <otherwise>
+                j.create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--
+      详情查询
+    -->
+    <select id="selectPublicDetail" resultType="com.example.backend.vo.JobDetailVO">
+        SELECT
+            j.id, j.title, j.description, j.requirement,
+            j.status,
+
+            j.min_salary AS minSalary,
+            j.max_salary AS maxSalary,
+            j.headcount AS headcount,
+            j.work_location AS workLocation,
+            j.district,
+            j.experience, j.degree, j.tags,
+            j.create_time AS createTime,
+
+            -- 公司信息映射
+            COALESCE(m.company_name, '未认证企业') AS companyName,
+            COALESCE(m.company_logo, u.avatar) AS companyLogo,
+            COALESCE(m.scale, '100-499人') AS companyScale,
+            COALESCE(m.industry, '互联网') AS companyIndustry,
+            COALESCE(m.address, CONCAT(j.work_location, IFNULL(j.district, ''))) AS companyAddress,
+
+            -- 发布者信息映射
+            COALESCE(u.nickname, u.username, '招聘官') AS publisherName,
+            u.avatar AS publisherAvatar,
+            u.id AS publisherId,
+            '招聘负责人' AS publisherTitle,
+
+            -- 分类信息
+            c.category_name AS categoryName,
+            j.category_id AS categoryId
+
+        FROM job_post j
+        LEFT JOIN sys_user u ON j.merchant_id = u.id
+        LEFT JOIN merchant_profile m ON u.id = m.user_id
+        LEFT JOIN job_category c ON j.category_id = c.id
+        WHERE j.id = #{id}
+          AND j.audit_status = 1
+    </select>
+
+    <!-- 商家端列表查询 -->
+    <select id="selectMerchantJobList" resultType="com.example.backend.entity.JobInfo">
+        SELECT
+            j.*,
+            c.category_name AS categoryName
+        FROM job_post j
+        LEFT JOIN job_category c ON j.category_id = c.id
+        WHERE j.merchant_id = #{merchantId}
+        <if test="status != null">
+            AND j.status = #{status}
+        </if>
+        <if test="auditStatus != null">
+            AND j.audit_status = #{auditStatus}
+        </if>
+        ORDER BY j.create_time DESC
+    </select>
+
+    <!-- 管理员：职位审核列表 -->
+    <select id="selectAdminAuditList" resultType="com.example.backend.vo.AdminJobAuditVO">
+        SELECT
+            j.id,
+            j.title,
+            COALESCE(m.company_name, '未认证企业') AS companyName,
+            j.work_location AS location,
+            CONCAT(j.min_salary, '-', j.max_salary, 'K') AS salary,
+            j.headcount AS headcount,
+            j.tags,
+            j.audit_status AS auditStatus,
+            j.audit_reason AS reason,
+            j.create_time AS createdAt,
+            j.last_edit_summary AS lastEditSummary,
+            j.last_edit_time AS lastEditTime
+        FROM job_post j
+        LEFT JOIN merchant_profile m ON j.merchant_id = m.user_id
+        WHERE 1 = 1
+        <if test="keyword != null and keyword != ''">
+            AND (
+                j.title LIKE CONCAT('%', #{keyword}, '%')
+                OR COALESCE(m.company_name, '未认证企业') LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        <if test="status != null">
+            AND j.audit_status = #{status}
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sortField == 'auditStatus'">
+                CASE
+                    WHEN j.audit_status = 1 THEN 1
+                    WHEN j.audit_status = 0 THEN 2
+                    WHEN j.audit_status = 2 THEN 3
+                    ELSE 4
+                END ASC,
+                j.create_time
+                <choose>
+                    <when test="timeOrder == 'asc'"> ASC</when>
+                    <when test="timeOrder == 'desc'"> DESC</when>
+                    <otherwise> DESC</otherwise>
+                </choose>
+            </when>
+            <when test="sortField == 'createdAt'">
+                j.create_time
+                <choose>
+                    <when test="sortOrder == 'asc'"> ASC</when>
+                    <when test="sortOrder == 'desc'"> DESC</when>
+                    <otherwise> DESC</otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                j.create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

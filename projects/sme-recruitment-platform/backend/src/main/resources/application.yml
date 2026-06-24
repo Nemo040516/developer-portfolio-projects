@@ -1,0 +1,39 @@
+#
+# 文件速览：
+# 1. 文件职责：定义后端主环境基础配置、数据源参数与认证安全默认开关。
+# 2. 对外入口：Spring Boot 主配置文件，服务启动时加载。
+# 3. 关键结构：spring 数据源、mybatis-plus、app.jwt.secret、app.auth.force-password-change。
+# 4. 阅读建议：先看 spring，再看底部 app 安全相关配置。
+#
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:sme_recruitment_db}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    # 【关键配置】全局设置JSON命名策略为下划线风格
+    # property-naming-strategy: SNAKE_CASE # 注释掉这一行，避免自动转下划线导致驼峰字段无法映射
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启下划线转驼峰 (核心！没有这行，前端就读不到数据)
+    map-underscore-to-camel-case: true
+
+app:
+  jwt:
+    # 主环境必须显式注入 JWT 密钥，避免继续依赖仓库内固定密钥。
+    secret: ${APP_JWT_SECRET:}
+    # 本地演示环境默认放宽到 4 小时，避免调试时登录态过早失效。
+    # 如需更严格口径，可通过 APP_JWT_EXPIRE_MS 显式覆盖。
+    expire-ms: ${APP_JWT_EXPIRE_MS:14400000}
+  auth:
+    force-password-change:
+      # 演示环境默认关闭强制改密；测试环境可单独打开。
+      enabled: false

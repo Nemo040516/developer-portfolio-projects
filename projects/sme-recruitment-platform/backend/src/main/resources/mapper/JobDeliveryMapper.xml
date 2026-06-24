@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.JobDeliveryMapper">
+
+    <resultMap id="MerchantDeliveryMap" type="com.example.backend.vo.MerchantDeliveryVO">
+        <id column="delivery_id" property="id"/>
+        <result column="job_id" property="jobId"/>
+        <result column="job_title" property="jobName"/>
+        <result column="status" property="status"/>
+        <result column="feedback" property="feedback"/>
+        <result column="resume_url" property="resumeUrl"/>
+        <result column="attachment_status" property="attachmentStatus"/>
+        <result column="has_resume_attachment" property="hasResumeAttachment"/>
+        <result column="interview_time" property="interviewTime"/>
+        <result column="interview_location" property="interviewLocation"/>
+        <result column="interview_method" property="interviewMethod"/>
+        <result column="interview_remark" property="interviewRemark"/>
+        <result column="interview_status" property="interviewStatus"/>
+        <result column="create_time" property="createTime"/>
+        <association property="applicant" javaType="com.example.backend.vo.ApplicantSimpleVO">
+            <id column="applicant_id" property="userId"/>
+            <result column="applicant_nickname" property="nickname"/>
+            <result column="applicant_real_name" property="realName"/>
+            <result column="gender" property="gender"/>
+            <result column="age" property="age"/>
+            <result column="work_years" property="workYears"/>
+            <result column="college" property="college"/>
+            <result column="collage" property="collage"/>
+            <result column="degree" property="degree"/>
+            <result column="applicant_avatar" property="avatar"/>
+            <result column="applicant_phone" property="phone"/>
+            <result column="applicant_email" property="email"/>
+            <result column="current_identity" property="currentIdentity"/>
+            <result column="current_status" property="currentStatus"/>
+            <result column="expect_city" property="expectCity"/>
+            <result column="expect_job" property="expectJob"/>
+            <result column="expect_salary" property="expectSalary"/>
+            <result column="skills" property="skills"/>
+            <result column="advantage" property="advantage"/>
+            <result column="education_json" property="educationJson"/>
+            <result column="experience_json" property="experienceJson"/>
+            <result column="project_json" property="projectJson"/>
+            <result column="certificate_json" property="certificateJson"/>
+            <result column="award_json" property="awardJson"/>
+            <result column="language_json" property="languageJson"/>
+        </association>
+    </resultMap>
+
+    <select id="selectMerchantDeliveryPage" resultMap="MerchantDeliveryMap">
+        SELECT
+            d.id AS delivery_id,
+            d.job_id,
+            COALESCE(d.status, 0) AS status,
+            d.feedback,
+            CASE WHEN p.status = 1 THEN COALESCE(a.resume_url, d.resume_url) ELSE NULL END AS resume_url,
+            p.status AS attachment_status,
+            CASE WHEN COALESCE(a.resume_url, d.resume_url) IS NULL OR COALESCE(a.resume_url, d.resume_url) = '' THEN 0 ELSE 1 END AS has_resume_attachment,
+            i.schedule_time AS interview_time,
+            i.location AS interview_location,
+            i.method AS interview_method,
+            i.remark AS interview_remark,
+            i.status AS interview_status,
+            d.create_time,
+            j.title AS job_title,
+            u.id AS applicant_id,
+            u.nickname AS applicant_nickname,
+            u.avatar AS applicant_avatar,
+            a.real_name AS applicant_real_name,
+            a.gender,
+            a.work_years,
+            a.college AS college,
+            a.college AS collage,
+            a.degree,
+            a.phone AS applicant_phone,
+            a.email AS applicant_email,
+            a.current_identity,
+            a.current_status,
+            a.expect_city,
+            a.expect_job,
+            a.expect_salary,
+            a.skills,
+            a.advantage,
+            a.education_json,
+            a.experience_json,
+            a.project_json,
+            a.certificate_json,
+            a.award_json,
+            a.language_json,
+            TIMESTAMPDIFF(YEAR, a.birthday, CURDATE()) AS age
+        FROM job_apply d
+        JOIN job_post j ON d.job_id = j.id
+        JOIN sys_user u ON d.applicant_id = u.id
+        LEFT JOIN applicant_profile a ON u.id = a.user_id
+        LEFT JOIN resume_attachment_permission p
+            ON p.applicant_id = d.applicant_id
+            AND p.merchant_id = j.merchant_id
+            AND p.attachment_type = 'RESUME'
+        LEFT JOIN (
+            SELECT s1.* FROM job_interview s1
+            JOIN (
+                SELECT delivery_id, MAX(round_no) AS max_round
+                FROM job_interview
+                GROUP BY delivery_id
+            ) s2 ON s1.delivery_id = s2.delivery_id AND s1.round_no = s2.max_round
+        ) i ON i.delivery_id = d.id
+        WHERE j.merchant_id = #{merchantId}
+        <if test="jobId != null">
+            AND d.job_id = #{jobId}
+        </if>
+        <if test="status != null">
+            AND COALESCE(d.status, 0) = #{status}
+        </if>
+        <if test="degree != null and degree != ''">
+            AND a.degree = #{degree}
+        </if>
+        ORDER BY d.create_time DESC
+    </select>
+
+    <select id="selectMyDeliveryPage" resultType="com.example.backend.vo.DeliveryVO">
+        SELECT
+            d.id,
+            d.job_id AS jobId,
+            COALESCE(d.status, 0) AS status,
+            d.feedback,
+            i.schedule_time AS interviewTime,
+            i.location AS interviewLocation,
+            i.method AS interviewMethod,
+            i.remark AS interviewRemark,
+            i.status AS interviewStatus,
+            d.create_time AS createTime,
+            j.title AS jobTitle,
+            j.work_location AS workLocation,
+            j.min_salary AS minSalary,
+            j.max_salary AS maxSalary,
+            CONCAT(j.min_salary, 'k-', j.max_salary, 'k') AS salaryRange,
+            m.company_name AS companyName,
+            j.status AS jobStatus,
+            j.audit_status AS jobAuditStatus
+        FROM job_apply d
+        LEFT JOIN job_post j ON d.job_id = j.id
+        LEFT JOIN merchant_profile m ON j.merchant_id = m.user_id
+        LEFT JOIN (
+            SELECT s1.* FROM job_interview s1
+            JOIN (
+                SELECT delivery_id, MAX(round_no) AS max_round
+                FROM job_interview
+                GROUP BY delivery_id
+            ) s2 ON s1.delivery_id = s2.delivery_id AND s1.round_no = s2.max_round
+        ) i ON i.delivery_id = d.id
+        WHERE d.applicant_id = #{userId}
+        <if test="status != null">
+            AND COALESCE(d.status, 0) = #{status}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (
+                j.title LIKE CONCAT('%', #{keyword}, '%')
+                OR m.company_name LIKE CONCAT('%', #{keyword}, '%')
+                OR j.work_location LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        <choose>
+            <when test="timeOrder != null and timeOrder == 'asc'">
+                ORDER BY d.create_time ASC
+            </when>
+            <otherwise>
+                ORDER BY d.create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

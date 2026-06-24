@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.ReportInfoMapper">
+
+    <!--
+      管理员：举报处理列表
+    -->
+    <select id="selectAdminReportList" resultType="com.example.backend.vo.AdminReportVO">
+        SELECT
+            r.id,
+            r.type,
+            r.target_id AS targetId,
+            CASE
+                WHEN r.type = 'JOB' THEN COALESCE(j.title, CONCAT('职位#', r.target_id))
+                WHEN r.type = 'MERCHANT' THEN COALESCE(m1.company_name, m2.company_name, CONCAT('企业#', r.target_id))
+                WHEN r.type = 'USER' THEN COALESCE(su.nickname, su.username, CONCAT('用户#', r.target_id))
+                ELSE CONCAT('对象#', r.target_id)
+            END AS targetName,
+            COALESCE(u.nickname, u.username, '匿名用户') AS reporter,
+            u.role AS reporterRole,
+            r.reason,
+            r.status,
+            r.result,
+            COALESCE(
+                (
+                    SELECT GROUP_CONCAT(re.file_url ORDER BY re.sort_order SEPARATOR ',')
+                    FROM report_evidence re
+                    WHERE re.report_id = r.id
+                ),
+                r.evidence
+            ) AS evidence,
+            CAST(
+                (
+                    SELECT JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'fileUrl', re.file_url,
+                            'fileType', re.file_type,
+                            'sortOrder', re.sort_order,
+                            'createTime', DATE_FORMAT(re.create_time, '%Y-%m-%d %H:%i:%s')
+                        )
+                    )
+                    FROM report_evidence re
+                    WHERE re.report_id = r.id
+                ) AS CHAR
+            ) AS evidenceFiles,
+            r.action_code AS actionCode,
+            r.handled_by AS handledBy,
+            r.handled_time AS handledTime,
+            CAST(r.target_snapshot AS CHAR) AS targetSnapshot,
+            (
+                SELECT COUNT(*)
+                FROM report_info r2
+                WHERE r2.type = r.type
+                  AND r2.target_id = r.target_id
+            ) AS reportCount,
+
+            -- JOB：岗位详情
+            j.title AS jobTitle,
+            COALESCE(jm.company_name, '未认证企业') AS jobCompanyName,
+            CONCAT_WS(' ', j.work_location, j.district) AS jobLocation,
+            CASE
+                WHEN j.min_salary IS NOT NULL AND j.max_salary IS NOT NULL
+                    THEN CONCAT(j.min_salary, '-', j.max_salary, 'K')
+                ELSE '面议'
+            END AS jobSalary,
+            j.degree AS jobDegree,
+            j.experience AS jobExperience,
+            j.headcount AS jobHeadcount,
+            j.status AS jobStatus,
+            j.audit_status AS jobAuditStatus,
+            j.description AS jobDescription,
+            j.requirement AS jobRequirement,
+            j.tags AS jobTags,
+            j.category_id AS jobCategoryId,
+            jc.category_name AS jobCategoryName,
+            COALESCE(jm.company_logo, ju.avatar) AS jobCompanyLogo,
+            jm.scale AS jobCompanyScale,
+            jm.industry AS jobCompanyIndustry,
+            CONCAT(
+                IFNULL(jm.province, ''),
+                IFNULL(jm.city, ''),
+                IFNULL(jm.district, ''),
+                IFNULL(jm.address, '')
+            ) AS jobCompanyAddress,
+            ju.id AS jobPublisherId,
+            COALESCE(ju.nickname, ju.username, '招聘负责人') AS jobPublisherName,
+            ju.avatar AS jobPublisherAvatar,
+
+            -- MERCHANT：企业详情（兼容 target_id=user_id / merchant_profile.id）
+            COALESCE(m1.company_name, m2.company_name) AS merchantCompanyName,
+            COALESCE(m1.industry, m2.industry) AS merchantIndustry,
+            COALESCE(m1.scale, m2.scale) AS merchantScale,
+            COALESCE(m1.financing, m2.financing) AS merchantFinancing,
+            CONCAT(
+                IFNULL(COALESCE(m1.province, m2.province), ''),
+                IFNULL(COALESCE(m1.city, m2.city), ''),
+                IFNULL(COALESCE(m1.district, m2.district), ''),
+                IFNULL(COALESCE(m1.address, m2.address), '')
+            ) AS merchantAddress,
+            COALESCE(m1.contact_name, m2.contact_name, mu.nickname, mu.username) AS merchantContactName,
+            COALESCE(m1.contact_phone, m2.contact_phone, mu.phone) AS merchantContactPhone,
+            COALESCE(m1.publish_status, m2.publish_status) AS merchantPublishStatus,
+            COALESCE(m1.audit_status, m2.audit_status) AS merchantAuditStatus,
+            COALESCE(m1.description, m2.description) AS merchantDescription,
+
+            -- USER：账号详情
+            su.nickname AS userNickname,
+            su.username AS userUsername,
+            su.role AS userRole,
+            su.phone AS userPhone,
+            su.email AS userEmail,
+            su.status AS userStatus,
+            su.ban_status AS userBanStatus,
+            r.create_time AS createdAt
+        FROM report_info r
+        LEFT JOIN job_post j ON r.type = 'JOB' AND r.target_id = j.id
+        LEFT JOIN job_category jc ON r.type = 'JOB' AND j.category_id = jc.id
+        LEFT JOIN sys_user ju ON r.type = 'JOB' AND j.merchant_id = ju.id
+        LEFT JOIN merchant_profile jm ON r.type = 'JOB' AND j.merchant_id = jm.user_id
+        LEFT JOIN merchant_profile m1 ON r.type = 'MERCHANT' AND r.target_id = m1.user_id
+        LEFT JOIN merchant_profile m2 ON r.type = 'MERCHANT' AND r.target_id = m2.id
+        LEFT JOIN sys_user mu ON r.type = 'MERCHANT' AND mu.id = COALESCE(m1.user_id, m2.user_id)
+        LEFT JOIN sys_user su ON r.type = 'USER' AND r.target_id = su.id
+        LEFT JOIN sys_user u ON r.reporter_id = u.id
+        WHERE 1 = 1
+        <if test="type != null and type != ''">
+            AND r.type = #{type}
+        </if>
+        <if test="status != null">
+            AND r.status = #{status}
+        </if>
+        ORDER BY r.create_time DESC
+    </select>
+</mapper>

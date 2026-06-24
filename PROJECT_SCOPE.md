@@ -6,10 +6,11 @@
 
 项目已按功能重新命名：
 
-- `projects/warehouse-management-system`：仓储管理系统
-- `projects/dance-motion-analysis-system`：舞蹈动作视频比对与纠错系统
+- `projects/sme-recruitment-platform`：中小商家招聘与投递管理平台，我的自有本科毕业设计项目
+- `projects/warehouse-management-system`：仓储管理系统，匿名化委托 / 协作开发项目案例
+- `projects/dance-motion-analysis-system`：舞蹈动作视频比对与纠错系统，匿名化委托 / 协作开发项目案例
 
-这些项目可表述为**匿名化的委托开发 / 协作开发项目案例**。这种表述既说明了项目背景，又避免公开不必要的个人信息。
+主展示项目可表述为“我的自有本科毕业设计项目”。补充项目可表述为“匿名化的委托开发 / 协作开发项目案例”。这种表述既说明项目背景，又避免公开不必要的个人信息。
 
 公开仓库中只保留可讨论的技术实现，不包含：
 
@@ -17,8 +18,8 @@
 - 论文、答辩文件、任务书、过程稿
 - `target/`、`dist/`、缓存、日志等构建或运行产物
 - `.venv/`、`node_modules/` 等依赖目录
-- 上传视频、运行期 JSON 记录、模型二进制文件和临时输出
-- 真实凭据、`.env` 文件、本机私有配置和 IDE 状态
+- 上传视频、上传简历、资质文件、运行期 JSON 记录、模型二进制文件和临时输出
+- 真实凭据、`.env` 文件、本机私有配置、JWT 登录态和 IDE 状态
 
 ## English
 
@@ -26,10 +27,11 @@ This repository is prepared for resume and interview use. The projects are **und
 
 The projects are renamed by function:
 
-- `projects/warehouse-management-system`: Warehouse Management System
-- `projects/dance-motion-analysis-system`: Dance Motion Analysis System
+- `projects/sme-recruitment-platform`: SME Recruitment and Application Management Platform, my own undergraduate graduation project
+- `projects/warehouse-management-system`: Warehouse Management System, anonymized commissioned / collaborative development case
+- `projects/dance-motion-analysis-system`: Dance Motion Analysis System, anonymized commissioned / collaborative development case
 
-These projects can be described as **anonymized commissioned / collaborative development cases**. This wording keeps the background honest without exposing unnecessary personal details.
+The main showcase project can be described as my own undergraduate graduation project. The additional projects can be described as anonymized commissioned / collaborative development cases. This wording keeps the background honest without exposing unnecessary personal details.
 
 The public repository intentionally excludes:
 
@@ -37,8 +39,8 @@ The public repository intentionally excludes:
 - thesis papers, defense files, task books, and draft review files
 - generated build output such as `target/`, `dist/`, caches, and logs
 - dependency folders such as `.venv/` and `node_modules/`
-- uploaded videos, runtime JSON records, model binaries, and temporary output
-- real credentials, `.env` files, private local settings, and IDE state
+- uploaded videos, uploaded resumes, qualification files, runtime JSON records, model binaries, and temporary output
+- real credentials, `.env` files, private local settings, JWT session state, and IDE state
 
 ## Intended Use / 使用方式
 
@@ -65,4 +67,3 @@ Not intended as:
 - 资深企业级交付经验
 - 可直接商用部署的 SaaS 或生产系统
 - 私人毕设材料或学校材料的公开归档
-
