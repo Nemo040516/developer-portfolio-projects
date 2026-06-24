@@ -1,31 +1,73 @@
-# Developer Portfolio Projects / 求职作品集项目
+# Full-Stack Developer Portfolio / 全栈开发作品集
 
-## 中文说明
+Selected projects for resume and interview review. The code has been reorganized for public access, with private academic files, local configuration, runtime uploads, logs, and generated output excluded.
 
-这个仓库用于简历和面试作品展示，收录的是我整理过的**毕设级 / 课程设计级小项目**。项目可以展示前后端开发、接口设计、数据库脚本、测试用例和项目文档整理能力，但不应包装成资深工程师参与的大型企业级落地系统。
+这是一个用于简历和面试展示的代码作品集。仓库中的项目已按功能重新整理命名，公开内容聚焦于代码实现、业务建模、接口设计、数据库脚本、测试用例和项目文档，不包含论文、答辩材料、本机配置、上传文件、日志或构建产物。
 
-仓库中的项目已按功能重新命名，并做了公开仓库整理。主展示项目是我的自有本科毕业设计；补充项目是匿名化的委托开发 / 协作开发项目案例。公开仓库只展示可讨论的技术实现，不公开个人姓名、学校材料、论文、答辩资料、视频素材、本机私有配置或运行期隐私数据。
+## Portfolio Snapshot / 作品集概览
 
-## English
+- **Main showcase / 主展示项目**：SME Recruitment and Application Management Platform / 中小商家招聘与投递管理平台，我的自有本科毕业设计项目。
+- **Technical coverage / 技术覆盖**：Vue 3, Vite, Element Plus, Pinia, Spring Boot, Spring Security, JWT, MyBatis-Plus, MySQL, WebSocket, Flask, Playwright, JUnit, pytest.
+- **Review focus / 审阅重点**：multi-role workflows, API design, database schema, frontend state and routing, access control, file upload permissions, realtime messaging, automated tests.
+- **Public-safe version / 公开安全版本**：project names are functional and anonymized; personal identifiers, school-only materials, credentials, session state, uploads, logs, and build output are excluded.
 
-This repository is a resume and interview portfolio. It contains selected **undergraduate graduation-project-level / course-project-level projects** reorganized for public technical review.
+## Project Index / 项目索引
 
-The projects are honest small-scale portfolio examples. They demonstrate full-stack implementation, API design, database scripts, test coverage, and documentation habits, but they should not be described as senior-level enterprise production systems.
+| Project | What It Demonstrates | Stack | Suggested Review Focus |
+| --- | --- | --- | --- |
+| [SME Recruitment and Application Management Platform](projects/sme-recruitment-platform)<br>中小商家招聘与投递管理平台 | Main showcase project. A multi-role recruitment platform for merchants, applicants, and administrators.<br>主展示项目。面向商家、求职者和管理员三类角色的招聘与投递管理平台。 | Vue 3, Vite, Element Plus, Pinia, Spring Boot, Spring Security, JWT, MyBatis-Plus, MySQL, WebSocket, Playwright | Role-based access, recruitment lifecycle, application management, WebSocket chat, governance notices, upload access control, backend and E2E tests.<br>角色权限、招聘业务流程、投递管理、即时沟通、治理通知、上传访问控制、后端与端到端测试。 |
+| [Warehouse Management System](projects/warehouse-management-system)<br>仓储管理系统 | Anonymized collaboration / commissioned case covering common warehouse workflows.<br>匿名化协作 / 委托开发案例，覆盖常见仓储业务流程。 | Vue 3, Vite, Spring Boot, Spring Security, JWT, MySQL, Playwright | CRUD workflows, role-based menus, inbound, putaway, outbound, inventory, stocktake, replenishment, SQL scripts, integration tests.<br>CRUD 流程、权限菜单、入库、上架、出库、库存、盘点、补货建议、SQL 脚本和集成测试。 |
+| [Dance Motion Analysis System](projects/dance-motion-analysis-system)<br>舞蹈动作视频比对与纠错系统 | Anonymized collaboration / commissioned Flask application for video comparison and feedback workflows.<br>匿名化协作 / 委托开发 Flask 项目，用于展示视频比对与反馈流程。 | Python, Flask, Jinja, HTML/CSS/JavaScript, pytest | Flask routing, service-layer separation, video workflow pages, comparison logic, local JSON storage, API and service tests.<br>Flask 路由、服务层拆分、视频流程页面、动作比对逻辑、本地 JSON 记录、接口与服务测试。 |
 
-The main showcase project is my own undergraduate graduation project. The additional projects are published as anonymized commissioned / collaborative development cases. Only public code, tests, and engineering structure are included. Personal identifiers, school-specific materials, papers, defense files, video assets, private local configuration, and runtime data are excluded.
+## Main Showcase / 主展示项目
 
-## Main Showcase Project / 主展示项目
+### SME Recruitment and Application Management Platform
 
-| Project | 中文名称 | Source / 来源 | Tech Stack / 技术栈 | What It Shows / 展示重点 |
-| --- | --- | --- | --- | --- |
-| [SME Recruitment and Application Management Platform](projects/sme-recruitment-platform) | 中小商家招聘与投递管理平台 | My own undergraduate graduation project / 我的自有本科毕业设计项目 | Vue 3, Vite, Element Plus, Pinia, Spring Boot, Spring Security, JWT, MyBatis-Plus, MySQL, WebSocket, Playwright | Role-based workflows, recruitment lifecycle, resume/application management, chat, governance notices, upload access control, tests / 多角色流程、招聘生命周期、简历与投递管理、即时沟通、平台治理通知、上传访问控制、测试 |
+`projects/sme-recruitment-platform` is the primary project in this repository and is the recommended starting point for code review.
 
-## Additional Cases / 补充项目案例
+`projects/sme-recruitment-platform` 是本仓库的核心展示项目，建议作为代码审阅的第一入口。
 
-| Project | 中文名称 | Source / 来源 | Tech Stack / 技术栈 | What It Shows / 展示重点 |
-| --- | --- | --- | --- | --- |
-| [Warehouse Management System](projects/warehouse-management-system) | 仓储管理系统 | Anonymized commissioned / collaborative case / 匿名化委托或协作案例 | Vue 3, Vite, Spring Boot, MySQL, Playwright | CRUD workflows, role-based menus, inventory flows, SQL design, integration/E2E tests / 业务流程、权限菜单、库存流转、数据库脚本、测试 |
-| [Dance Motion Analysis System](projects/dance-motion-analysis-system) | 舞蹈动作视频比对与纠错系统 | Anonymized commissioned / collaborative case / 匿名化委托或协作案例 | Python, Flask, HTML/CSS/JavaScript, pytest | Flask routing, service-layer design, video workflow pages, motion comparison logic, tests / Flask 结构、服务层拆分、视频流程页面、动作比对逻辑、测试 |
+The project implements a full recruitment workflow for small and medium-sized merchants:
+
+- **Administrator / 管理员**：job review, merchant review, user ban, password reset, report handling, governance notices.
+- **Merchant / 商家**：company profile, job publishing, candidate management, talent pool, interview scheduling.
+- **Applicant / 求职者**：profile, online resume, job search, application tracking, interview list.
+- **Shared workflows / 公共流程**：JWT authentication, route protection, WebSocket chat, file upload access checks, governance notifications.
+
+Suggested entry points:
+
+| Area | Path |
+| --- | --- |
+| Project overview / 项目总览 | [projects/sme-recruitment-platform/README.md](projects/sme-recruitment-platform/README.md) |
+| Backend application code / 后端应用代码 | [projects/sme-recruitment-platform/backend/src/main/java/com/example/backend](projects/sme-recruitment-platform/backend/src/main/java/com/example/backend) |
+| Frontend role pages / 前端角色页面 | [projects/sme-recruitment-platform/frontend/src/views](projects/sme-recruitment-platform/frontend/src/views) |
+| Frontend API modules / 前端接口模块 | [projects/sme-recruitment-platform/frontend/src/api](projects/sme-recruitment-platform/frontend/src/api) |
+| Database bootstrap scripts / 数据库初始化脚本 | [projects/sme-recruitment-platform/scripts/bootstrap](projects/sme-recruitment-platform/scripts/bootstrap) |
+| Backend tests / 后端测试 | [projects/sme-recruitment-platform/backend/src/test](projects/sme-recruitment-platform/backend/src/test) |
+| Frontend E2E tests / 前端端到端测试 | [projects/sme-recruitment-platform/frontend/e2e](projects/sme-recruitment-platform/frontend/e2e) |
+
+## Verification / 本地验证
+
+The main showcase project was locally verified before being published in this portfolio version.
+
+主展示项目在整理进入公开作品集前已完成本地基础验证。
+
+```powershell
+# Backend / 后端
+cd projects\sme-recruitment-platform\backend
+.\mvnw.cmd test
+
+# Frontend / 前端
+cd projects\sme-recruitment-platform\frontend
+npm ci
+npm run build
+```
+
+Latest local result / 最近一次本地结果：
+
+- Backend tests: **159 passed, 0 failed**.
+- Frontend production build: **passed**.
+- `npm audit` reported dependency vulnerabilities; they are documented as follow-up work before any real deployment.
 
 ## Repository Layout / 仓库结构
 
@@ -51,12 +93,38 @@ developer-portfolio-projects/
       README.md
 ```
 
-## How to Read / 如何阅读
+## Recommended Review Path / 推荐阅读方式
 
-For interview review, start with the main project README, then inspect the backend services, frontend views/components, database scripts, and test cases.
+For a quick interview review, start with the main project README, then inspect backend services, frontend role pages, API modules, database scripts, and tests.
 
-面试或代码审阅时，建议先看主展示项目 README，再看后端服务层、前端页面与组件、数据库脚本和测试用例。
+如果用于简历或面试审阅，建议按下面顺序阅读：
 
-The goal is not to claim large-scale production experience. The goal is to provide concrete code samples that can be discussed honestly in an interview.
+1. Read [the main project README](projects/sme-recruitment-platform/README.md) to understand scope, roles, and local setup.
+2. Review backend `controller / service / mapper` code for role permissions, recruitment flow, governance notices, and upload access control.
+3. Review frontend `views / api / stores` code for role pages, route guards, API encapsulation, and state handling.
+4. Review database scripts and tests to understand schema design, demo data, MockMvc coverage, and Playwright E2E coverage.
 
-这个仓库的目标不是证明大型生产项目经验，而是提供可以在面试中真实讨论的代码样例。
+1. 先看 [主项目 README](projects/sme-recruitment-platform/README.md)，了解项目范围、角色划分和本地运行方式。
+2. 再看后端 `controller / service / mapper`，重点关注角色权限、投递流程、治理通知和上传访问控制。
+3. 再看前端 `views / api / stores`，重点关注三类角色页面、路由守卫、接口封装和状态管理。
+4. 最后看数据库脚本和测试，确认表结构、演示数据、MockMvc 覆盖范围和 Playwright E2E 覆盖范围。
+
+## Scope and Disclosure / 项目边界说明
+
+This is a portfolio repository, not a production deployment package.
+
+这是求职作品集仓库，不是可直接商用部署的生产系统包。
+
+- The main showcase project is my own undergraduate graduation project.
+- The additional projects are anonymized collaboration / commissioned development cases.
+- Public code keeps the implementation structure that is useful for technical review.
+- Private academic materials, personal identifiers, local credentials, uploaded runtime files, logs, generated build output, and session state are excluded.
+- These projects demonstrate practical implementation ability, but should not be presented as senior enterprise production delivery experience.
+
+- 主展示项目是我的自有本科毕业设计项目。
+- 补充项目是已匿名化处理的协作 / 委托开发案例。
+- 公开仓库保留适合技术审阅的代码结构、测试和说明。
+- 论文、答辩材料、学校材料、个人标识、本机凭据、上传文件、日志、构建产物和登录态均不进入公开仓库。
+- 这些项目用于展示实际开发能力，不应包装成资深企业级生产交付经验。
+
+More details / 详细边界说明：[PROJECT_SCOPE.md](PROJECT_SCOPE.md)
